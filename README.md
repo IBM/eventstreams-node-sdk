@@ -197,7 +197,6 @@ The following sections explain how the REST API works with examples.
 ### Code Setup
 
 	// Code Setup
-	
 	const HTTP = require('http');
 	const util = require('util');
 	const KAFKA_ADMIN_URL = process.env.KAFKA_ADMIN_URL;
@@ -207,10 +206,10 @@ The following sections explain how the REST API works with examples.
 	const { BasicAuthenticator } = require('../dist/auth');
 	const { BearerTokenAuthenticator } = require('../dist/auth');
 	const { NoAuthAuthenticator } = require('../dist/auth');
-	const topicName = "test-topic";
-	var authenticator = new NoAuthAuthenticator({});
+	const topicName = 'test-topic';
+	let authenticator = new NoAuthAuthenticator({});
+	/* eslint-disable no-console */
 	
-	console.log("Eventstreams Admin Rest SDK Example");
 	// Code Setup End
 
 
@@ -243,31 +242,31 @@ Here's an example of how to create the authenticator using either an API key or 
 
 	// Create Authenticator
 	if (KAFKA_ADMIN_URL === undefined || !KAFKA_ADMIN_URL) {
-	    console.log("Please set env KAFKA_ADMIN_URL");
-	    process.exit(1);
+	  console.log('Please set env KAFKA_ADMIN_URL');
+	  throw new Error('error KAFKA_ADMIN_URL not set');
 	}
 	
 	if ((API_KEY === undefined || !API_KEY) && (BEARER_TOKEN === undefined || !BEARER_TOKEN)) {
-	    console.log("Please set either an API_KEY or a BEARER_TOKEN");
-	    process.exit(1);
+	  console.log('Please set either an API_KEY or a BEARER_TOKEN');
+	  throw new Error('error: API_KEY or BEARER_TOKEN not set');
 	}
 	
-	if (API_KEY && BEARER_TOKEN){
-	    console.log("Please set either an API_KEY or a BEARER_TOKEN not both");
-	    process.exit(1);
+	if (API_KEY && BEARER_TOKEN) {
+	  console.log('Please set either an API_KEY or a BEARER_TOKEN not both');
+	  throw new Error('error: API_KEY and BEARER_TOKEN can not both be set');
 	}
 	
 	if (API_KEY) {
-	    // Create an Basic IAM authenticator.
-	    authenticator = new BasicAuthenticator({
-	        username: "token",
-	        password: API_KEY,
-	    });
+	  // Create an Basic IAM authenticator.
+	  authenticator = new BasicAuthenticator({
+	    username: 'token',
+	    password: API_KEY,
+	  });
 	} else {
-	    // Create an IAM Bearer Token authenticator.
-	    authenticator = new BearerTokenAuthenticator ({
-	        bearerToken: BEARER_TOKEN,
-	    });
+	  // Create an IAM Bearer Token authenticator.
+	  authenticator = new BearerTokenAuthenticator({
+	    bearerToken: BEARER_TOKEN,
+	  });
 	}
 	// End Authenticator
 
@@ -281,7 +280,7 @@ Create a new service object.
 	// Create Service
 	// Construct the service client.
 	const adminREST = new NewAdminrestV1({
-	  authenticator,                       
+	  authenticator,
 	  serviceUrl: KAFKA_ADMIN_URL,
 	});
 	// End Create Service
@@ -317,27 +316,30 @@ If the request to create a Kafka topic succeeds then HTTP status code 202 (Accep
 
 #### Example
 
-	function createTopic(adminREST,topicName) {
-	    console.log("Create Topic");
-	    // Construct the params object for operation createTopic
-	    const name = topicName;
-	    const partitions = 3;
-	    const params = {
-	      name: name,
-	      partitions: partitions,
-	    };
+	function createTopic(adminREST, topicName) {
+	  console.log('Create Topic');
+	  // Construct the params object for operation createTopic
+	  const name = topicName;
+	  const partitions = 3;
+	  const params = {
+	    name: name,
+	    partitions: partitions,
+	  };
 	
-	    // Call the create topic function on the service.
-	    const createTopicResult = adminREST.createTopic(params);
+	  // Call the create topic function on the service.
+	  const createTopicResult = adminREST.createTopic(params);
 	
-	    // Look at the results of the promise.
-	    return createTopicResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "Accepted" ) {
-	            console.log("\tname: " + topicName);
-	        }
-	    }, err => {
-	        console.log("\tError creating topics " + err); 
-	    });
+	  // Look at the results of the promise.
+	  return createTopicResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+	        console.log('\tname: ' + topicName);
+	      }
+	    },
+	    err => {
+	      console.log('\tError creating topics ' + err);
+	    }
+	  );
 	} // func.end
 
 
@@ -369,25 +371,28 @@ of time after the completion of a REST request to delete the topic.
 
 #### Example
 
-	function deleteTopic(adminREST,topicName){
-	    console.log("Delete Topic");
+	function deleteTopic(adminREST, topicName) {
+	  console.log('Delete Topic');
 	
-	    // Construct the params object for operation deleteTopic
-	    const params = {
-	        topicName: topicName,
-	    };
+	  // Construct the params object for operation deleteTopic
+	  const params = {
+	    topicName: topicName,
+	  };
 	
-	    // Call the delete topic function on the service.
-	    const deleteTopicResult = adminREST.deleteTopic(params);
+	  // Call the delete topic function on the service.
+	  const deleteTopicResult = adminREST.deleteTopic(params);
 	
-	    // Look at the results of the promise.
-	    return deleteTopicResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "Accepted" ) {
-	            console.log("\tname: " + topicName)
-	        }
-	    }, err => {
-	        console.log("\tError deleting topic: " + topicName + "error: " + err); 
-	    });
+	  // Look at the results of the promise.
+	  return deleteTopicResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+	        console.log('\tname: ' + topicName);
+	      }
+	    },
+	    err => {
+	      console.log('\tError deleting topic: ' + topicName + 'error: ' + err);
+	    }
+	  );
 	} // func.end
 
 
@@ -429,29 +434,32 @@ following properties:
 #### Example
 
 	function listTopics(adminREST) {
-	    console.log("List Topics");
+	  console.log('List Topics');
 	
-	    // Construct the params object for operation listTopics.
-	    const params = {
-	        // topicFilter defaults to an empty string to see all topics.
-	        // or you can specify a topic name.
-	        // topicFilter: "<You Topic Name>",
-	    };
-	    
-	    // Service operations can now be invoked using the "adminREST" variable.
-	    // Call listTopics on the service.
-	    const listTopicsResult = adminREST.listTopics(params);
-	   
-	    // Look at the results of the promise.
-	    return listTopicsResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "OK" ) {
-	            for(const val of result.result) {
-	                console.log("\tname: " + val.name);
-	                }
-	            }
-	        }, err => {
-	            console.log("Error listing topics " + err); 
-	    });
+	  // Construct the params object for operation listTopics.
+	  const params = {
+	    // topicFilter defaults to an empty string to see all topics.
+	    // or you can specify a topic name.
+	    // topicFilter: '<You Topic Name>',
+	  };
+	
+	  // Service operations can now be invoked using the 'adminREST' variable.
+	  // Call listTopics on the service.
+	  const listTopicsResult = adminREST.listTopics(params);
+	
+	  // Look at the results of the promise.
+	  return listTopicsResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+	        for (const val of result.result) {
+	          console.log('\tname: ' + val.name);
+	        }
+	      }
+	    },
+	    err => {
+	      console.log('Error listing topics ' + err);
+	    }
+	  );
 	} // func.end
 
 
@@ -493,25 +501,28 @@ Expected status codes
 ```
 
 #### Example
-	function topicDetails(adminREST,topicName) {
-	    console.log("Topic Details");
+	function topicDetails(adminREST, topicName) {
+	  console.log('Topic Details');
 	
-	    // Construct the params object for operation getTopic
-	    const params = {
-	        topicName: topicName,
-	    };
+	  // Construct the params object for operation getTopic
+	  const params = {
+	    topicName: topicName,
+	  };
 	
-	    // Call the get topic function on the service.
-	    const getTopicResult = adminREST.getTopic(params);
+	  // Call the get topic function on the service.
+	  const getTopicResult = adminREST.getTopic(params);
 	
-	    // Look at the results of the promise.
-	    return getTopicResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "OK" ) {
-	            console.log(util.inspect(result.result, false, null, true));
-	        }
-	    }, err => {
-	        console.log("\tError getting topic details: " + topicName + "error: " + err); 
-	    });
+	  // Look at the results of the promise.
+	  return getTopicResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+	        console.log(util.inspect(result.result, false, null, true));
+	      }
+	    },
+	    err => {
+	      console.log('\tError getting topic details: ' + topicName + 'error: ' + err);
+	    }
+	  );
 	} // func.end
 
 
@@ -542,26 +553,29 @@ Expected status codes
 
 #### Example
 
-	function updateTopic(adminREST,topicName) {
-	    console.log("Update Topic Details");
-	    // Construct the params object for operation updateTopic
-	    const newTotalPartitionCount = 6;
-	    const params = {
-	        topicName: topicName,
-	        newTotalPartitionCount: newTotalPartitionCount,
-	    };
+	function updateTopic(adminREST, topicName) {
+	  console.log('Update Topic Details');
+	  // Construct the params object for operation updateTopic
+	  const newTotalPartitionCount = 6;
+	  const params = {
+	    topicName: topicName,
+	    newTotalPartitionCount: newTotalPartitionCount,
+	  };
 	
-	    // Call the update topic function on the service.
-	    const updateTopicResult = adminREST.updateTopic(params);
+	  // Call the update topic function on the service.
+	  const updateTopicResult = adminREST.updateTopic(params);
 	
-	    // Look at the results of the promise.
-	    return updateTopicResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "Accepted" ) {
-	            console.log("\tname: " + topicName);
-	        }
-	    }, err => {
-	        console.log("\tError updating topic details: " + topicName + "error: " + err); 
-	    });
+	  // Look at the results of the promise.
+	  return updateTopicResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+	        console.log('\tname: ' + topicName);
+	      }
+	    },
+	    err => {
+	      console.log('\tError updating topic details: ' + topicName + 'error: ' + err);
+	    }
+	  );
 	} // func.end
 
 
@@ -590,22 +604,25 @@ Expected status codes
 #### Example
 
 	function getMirroringTopicSelection(adminREST) {
-	    console.log("List Mirroring Topic Selection");
-	    const params = {};
+	  console.log('List Mirroring Topic Selection');
+	  const params = {};
 	
-	    // Call the get mirroring topic selection function on the service.
-	    const getMirroringTopicSelectionResult = adminREST.getMirroringTopicSelection(params);
+	  // Call the get mirroring topic selection function on the service.
+	  const getMirroringTopicSelectionResult = adminREST.getMirroringTopicSelection(params);
 	
-	    // Look at the results of the promise.
-	    return getMirroringTopicSelectionResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "OK" ) {
-	            for(const val of result.result) {
-	                console.log("\tname: " + val.name);
-	            }
+	  // Look at the results of the promise.
+	  return getMirroringTopicSelectionResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+	        for (const val of result.result) {
+	          console.log('\tname: ' + val.name);
 	        }
-	    }, err => {
-	        console.log("Error listing mirroring topics selection " + err); 
-	    });
+	      }
+	    },
+	    err => {
+	      console.log('Error listing mirroring topics selection ' + err);
+	    }
+	  );
 	} // func.end
 
 
@@ -637,25 +654,28 @@ Expected status codes
 
 #### Example
 
-	function replaceMirroringTopicSelection(adminREST,topicName) {
-	    console.log("Replace Mirroring Topics");
-	    // Construct the params object for operation replaceMirroringTopicSelection
-	    const includes = topicName
-	    const params = {
-	        includes: includes,
-	    };
+	function replaceMirroringTopicSelection(adminREST, topicName) {
+	  console.log('Replace Mirroring Topics');
+	  // Construct the params object for operation replaceMirroringTopicSelection
+	  const includes = topicName;
+	  const params = {
+	    includes: includes,
+	  };
 	
-	    // Call the replace mirroring topic selection on the service.
-	    const replaceMirroringTopicSelectionResult = adminREST.replaceMirroringTopicSelection(params);
-	    
-	    // Look at the results of the promise.
-	    return replaceMirroringTopicSelectionResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "OK" ) {
-	            console.log("\tmirroring topic selection updated " + topicName);
-	        }
-	    }, err => {
-	        console.log("Error replacing mirroring topics selection " + err); 
-	    });
+	  // Call the replace mirroring topic selection on the service.
+	  const replaceMirroringTopicSelectionResult = adminREST.replaceMirroringTopicSelection(params);
+	
+	  // Look at the results of the promise.
+	  return replaceMirroringTopicSelectionResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+	        console.log('\tmirroring topic selection updated ' + topicName);
+	      }
+	    },
+	    err => {
+	      console.log('Error replacing mirroring topics selection ' + err);
+	    }
+	  );
 	} // func.end
 
 
@@ -684,21 +704,26 @@ Expected status codes
 #### Example
 
 	function getListMirroringActiveTopics(adminREST) {
-	    console.log("List Active Mirroring Topic Selection\n");
-	     // Construct the params object for operation getMirroringActiveTopics
-	     const params = {};
+	  console.log('List Active Mirroring Topic Selection\n');
+	  // Construct the params object for operation getMirroringActiveTopics
+	  const params = {};
 	
-	     // Call the get mirroring active topic function on the service.
-	     const getMirroringActiveTopicsResult = adminREST.getMirroringActiveTopics(params);
-	     
-	     // Look at the results of the promise.
-	     return getMirroringActiveTopicsResult.then((result) => {
-	        if ( HTTP.STATUS_CODES[result.status] == "OK" ) {
-	            console.log("\tname: " + val.name);
+	  // Call the get mirroring active topic function on the service.
+	  const getMirroringActiveTopicsResult = adminREST.getMirroringActiveTopics(params);
+	
+	  // Look at the results of the promise.
+	  return getMirroringActiveTopicsResult.then(
+	    result => {
+	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+	        for (const val of result.result) {
+	          console.log('\tname: ' + val.name);
 	        }
-	    }, err => {
-	        console.log("Error listing active mirroring topics selection " + err); 
-	    });
+	      }
+	    },
+	    err => {
+	      console.log('Error listing active mirroring topics selection ' + err);
+	    }
+	  );
 	} // func.end
 
 

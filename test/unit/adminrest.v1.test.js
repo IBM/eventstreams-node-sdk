@@ -443,7 +443,9 @@ describe('AdminrestV1', () => {
         // Construct the params object for operation getMirroringTopicSelection
         const params = {};
 
-        const getMirroringTopicSelectionResult = adminrestService.getMirroringTopicSelection(params);
+        const getMirroringTopicSelectionResult = adminrestService.getMirroringTopicSelection(
+          params
+        );
 
         // all methods should return a Promise
         expectToBePromise(getMirroringTopicSelectionResult);
@@ -490,7 +492,9 @@ describe('AdminrestV1', () => {
           includes: includes,
         };
 
-        const replaceMirroringTopicSelectionResult = adminrestService.replaceMirroringTopicSelection(params);
+        const replaceMirroringTopicSelectionResult = adminrestService.replaceMirroringTopicSelection(
+          params
+        );
 
         // all methods should return a Promise
         expectToBePromise(replaceMirroringTopicSelectionResult);
