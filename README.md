@@ -124,8 +124,6 @@ operations:
   
 The Admin REST API is also [documented using swagger](./admin-rest-api.yaml).
 
-Note: This Admin REST API works with both Enterprise plan and Standard plan.
-
 ## Access control
 ---
 
@@ -240,6 +238,7 @@ Use one of the following methods to authenticate:
 
 Here's an example of how to create the authenticator using either an API key or a BEARER_TOKEN
 
+```
 	// Create Authenticator
 	if (KAFKA_ADMIN_URL === undefined || !KAFKA_ADMIN_URL) {
 	  console.log('Please set env KAFKA_ADMIN_URL');
@@ -271,6 +270,7 @@ Here's an example of how to create the authenticator using either an API key or 
 	// End Authenticator
 
 
+```
 
 
 ### Creating a client for the Admin REST API.
@@ -291,6 +291,7 @@ Create a new service object.
 ---
 To create a Kafka topic the admin REST SDK issues a POST request to the /admin/topics path. 
 The body of the request contains a JSON document, for example:
+```
 {
     "name": "topicname",
     "partitions": 1,
@@ -299,8 +300,9 @@ The body of the request contains a JSON document, for example:
         "cleanupPolicy": "delete"
     }
 }
+```
 
-The only required field is name is `Partitions` which is defaults to 1 if not set.
+The only required field is name. The partitions fields defaults to 1 if not set.
 
 Expected HTTP status codes:
 
@@ -316,6 +318,7 @@ If the request to create a Kafka topic succeeds then HTTP status code 202 (Accep
 
 #### Example
 
+```
 	function createTopic(adminREST, topicName) {
 	  console.log('Create Topic');
 	  // Construct the params object for operation createTopic
@@ -343,7 +346,7 @@ If the request to create a Kafka topic succeeds then HTTP status code 202 (Accep
 	} // func.end
 
 
-
+```
 
 
 
@@ -361,9 +364,9 @@ Expected return codes:
   
 A 202 (Accepted) status code is returned if the REST API accepts the delete
 request or status code 422 (Un-processable Entity) if the delete request is
-rejected. If a delete request is rejected then the body of the HTTP response
-will contain a [JSON object](#information-returned-when-a-request-fails) which
-provides additional information about why the request was rejected.
+rejected. If a delete request is rejected then the body of the HTTP response 
+will contain a JSON object which provides additional information about why 
+the request was rejected.
 
 Kafka deletes topics asynchronously. Deleted topics may still appear in the
 response to a [list topics request](#listing-kafka-topics) for a short period
@@ -371,6 +374,7 @@ of time after the completion of a REST request to delete the topic.
 
 #### Example
 
+```
 	function deleteTopic(adminREST, topicName) {
 	  console.log('Delete Topic');
 	
@@ -396,6 +400,7 @@ of time after the completion of a REST request to delete the topic.
 	} // func.end
 
 
+```
 
 ### Listing Kafka topics
 ---
@@ -433,6 +438,7 @@ following properties:
 
 #### Example
 
+```
 	function listTopics(adminREST) {
 	  console.log('List Topics');
 	
@@ -463,6 +469,7 @@ following properties:
 	} // func.end
 
 
+```
 
 ### Getting a Kafka topic
 ---
@@ -470,7 +477,7 @@ To get a Kafka topic detail information, issue a GET request to the `/admin/topi
 path (where `TOPICNAME` is the name of the Kafka topic that you want to get).  
 
 Expected status codes
-  - 200: Retrieve topic details successfully in following format:
+- 200: Retrieve topic details successfully in following format:
 ```json
 {
   "name": "MYTOPIC",
@@ -499,8 +506,12 @@ Expected status codes
   ]
 }
 ```
+- 403: Not authorized.
+- 404: Topic does not exist.
 
 #### Example
+
+```
 	function topicDetails(adminREST, topicName) {
 	  console.log('Topic Details');
 	
@@ -526,11 +537,13 @@ Expected status codes
 	} // func.end
 
 
+```
 
 ### Updating Kafka topic's configuration
 ---
-To increase a topic's partition number or to update a topic's configuration, the admin REST SDK issues an
-`PATCH` request to `/admin/topics/{topic}` with the following body:
+To increase a Kafka topic's partition number or to update a Kafka topic's configuration, issue a
+`PATCH` request to `/admin/topics/TOPICNAME` with the following body:
+(where TOPICNAME is the name of the Kafka topic that you want to update).
 ```json
 {
   "new_total_partition_count": 4,
@@ -553,6 +566,7 @@ Expected status codes
 
 #### Example
 
+```
 	function updateTopic(adminREST, topicName) {
 	  console.log('Update Topic Details');
 	  // Construct the params object for operation updateTopic
@@ -579,6 +593,7 @@ Expected status codes
 	} // func.end
 
 
+```
 
 ### List current mirroring topic selection
 
@@ -603,6 +618,7 @@ Expected status codes
 
 #### Example
 
+```
 	function getMirroringTopicSelection(adminREST) {
 	  console.log('List Mirroring Topic Selection');
 	  const params = {};
@@ -626,6 +642,7 @@ Expected status codes
 	} // func.end
 
 
+```
 
 ### Replace selection of topics which are mirrored
 
@@ -654,6 +671,7 @@ Expected status codes
 
 #### Example
 
+```
 	function replaceMirroringTopicSelection(adminREST, topicName) {
 	  console.log('Replace Mirroring Topics');
 	  // Construct the params object for operation replaceMirroringTopicSelection
@@ -679,6 +697,7 @@ Expected status codes
 	} // func.end
 
 
+```
 
 ### List active mirroring topics
 ---
@@ -703,6 +722,7 @@ Expected status codes
 
 #### Example
 
+```
 	function getListMirroringActiveTopics(adminREST) {
 	  console.log('List Active Mirroring Topic Selection\n');
 	  // Construct the params object for operation getMirroringActiveTopics
@@ -727,3 +747,4 @@ Expected status codes
 	} // func.end
 
 
+```
