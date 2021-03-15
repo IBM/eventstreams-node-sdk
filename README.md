@@ -4,7 +4,7 @@
 [![npm-version](https://img.shields.io/npm/v/IBM/eventstreams-node-sdk.svg)](https://www.npmjs.com/package/adminrestv1)
 [![codecov](https://codecov.io/gh/IBM/eventstreams-node-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/IBM/eventstreams-node-sdk)
 -->
-# IBM Cloud Eventstreams Node SDK Version 0.0.1
+# IBM Cloud Eventstreams Node SDK Version 1.0.0
 
 ## Introduction
 
@@ -41,6 +41,7 @@ Changes might occur which impact applications that use this SDK.
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Using the SDK](#using-the-sdk)
+- [REST API documentation](#event-streams-administration-rest-api)
 - [Questions](#questions)
 - [Issues](#issues)
 - [Open source @ IBM](#open-source--ibm)
@@ -61,9 +62,7 @@ Service Name | Import Path
 
 ## Prerequisites
 
-[ibm-cloud-onboarding]: http://cloud.ibm.com/registration
-
-* An [IBM Cloud][ibm-cloud-onboarding] account.
+* An [IBM Cloud][https://cloud.ibm.com/registration] account.
 * The [IBM Cloud CLI.](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 * An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
 * A IBM Cloud Eventstreams Instance Create one [here](https://cloud.ibm.com/registration?target=/catalog/services/event-streams)
@@ -194,6 +193,7 @@ The following sections explain how the REST API works with examples.
 
 ### Code Setup
 
+```javascript
 	// Code Setup
 	const HTTP = require('http');
 	const util = require('util');
@@ -209,7 +209,7 @@ The following sections explain how the REST API works with examples.
 	/* eslint-disable no-console */
 	
 	// Code Setup End
-
+```
 
 
 ### Authentication
@@ -239,6 +239,7 @@ Use one of the following methods to authenticate:
 Here's an example of how to create the authenticator using either an API key or a BEARER_TOKEN
 
 ```
+```javascript
 	// Create Authenticator
 	if (KAFKA_ADMIN_URL === undefined || !KAFKA_ADMIN_URL) {
 	  console.log('Please set env KAFKA_ADMIN_URL');
@@ -268,7 +269,7 @@ Here's an example of how to create the authenticator using either an API key or 
 	  });
 	}
 	// End Authenticator
-
+```
 
 ```
 
@@ -277,6 +278,7 @@ Here's an example of how to create the authenticator using either an API key or 
 ---
 Create a new service object.
 
+```javascript
 	// Create Service
 	// Construct the service client.
 	const adminREST = new NewAdminrestV1({
@@ -284,7 +286,7 @@ Create a new service object.
 	  serviceUrl: KAFKA_ADMIN_URL,
 	});
 	// End Create Service
-
+```
 
 
 ### Creating a Kafka topic
@@ -319,6 +321,7 @@ If the request to create a Kafka topic succeeds then HTTP status code 202 (Accep
 #### Example
 
 ```
+```javascript
 	function createTopic(adminREST, topicName) {
 	  console.log('Create Topic');
 	  // Construct the params object for operation createTopic
@@ -344,7 +347,7 @@ If the request to create a Kafka topic succeeds then HTTP status code 202 (Accep
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
 
@@ -361,6 +364,7 @@ Expected return codes:
 - 202: Topic deletion request was accepted.
 - 403: Not authorized to delete topic.
 - 404: Topic does not exist.
+- 422: Semantically invalid request.
   
 A 202 (Accepted) status code is returned if the REST API accepts the delete
 request or status code 422 (Un-processable Entity) if the delete request is
@@ -375,6 +379,7 @@ of time after the completion of a REST request to delete the topic.
 #### Example
 
 ```
+```javascript
 	function deleteTopic(adminREST, topicName) {
 	  console.log('Delete Topic');
 	
@@ -398,7 +403,7 @@ of time after the completion of a REST request to delete the topic.
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
 
@@ -439,6 +444,7 @@ following properties:
 #### Example
 
 ```
+```javascript
 	function listTopics(adminREST) {
 	  console.log('List Topics');
 	
@@ -467,7 +473,7 @@ following properties:
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
 
@@ -512,6 +518,7 @@ Expected status codes
 #### Example
 
 ```
+```javascript
 	function topicDetails(adminREST, topicName) {
 	  console.log('Topic Details');
 	
@@ -535,7 +542,7 @@ Expected status codes
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
 
@@ -567,6 +574,7 @@ Expected status codes
 #### Example
 
 ```
+```javascript
 	function updateTopic(adminREST, topicName) {
 	  console.log('Update Topic Details');
 	  // Construct the params object for operation updateTopic
@@ -591,7 +599,7 @@ Expected status codes
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
 
@@ -619,6 +627,7 @@ Expected status codes
 #### Example
 
 ```
+```javascript
 	function getMirroringTopicSelection(adminREST) {
 	  console.log('List Mirroring Topic Selection');
 	  const params = {};
@@ -640,7 +649,7 @@ Expected status codes
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
 
@@ -672,6 +681,7 @@ Expected status codes
 #### Example
 
 ```
+```javascript
 	function replaceMirroringTopicSelection(adminREST, topicName) {
 	  console.log('Replace Mirroring Topics');
 	  // Construct the params object for operation replaceMirroringTopicSelection
@@ -695,7 +705,7 @@ Expected status codes
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
 
@@ -723,6 +733,7 @@ Expected status codes
 #### Example
 
 ```
+```javascript
 	function getListMirroringActiveTopics(adminREST) {
 	  console.log('List Active Mirroring Topic Selection\n');
 	  // Construct the params object for operation getMirroringActiveTopics
@@ -745,6 +756,6 @@ Expected status codes
 	    }
 	  );
 	} // func.end
-
+```
 
 ```
