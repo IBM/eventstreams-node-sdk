@@ -184,7 +184,7 @@ export KAFKA_ADMIN_URL="https://xyzclustername.svc01.region.eventstreams.test.cl
 
 Run the example
 ```sh
-    node ./example.js
+    node ./example/example.js
 ```
 
 ## REST API 
