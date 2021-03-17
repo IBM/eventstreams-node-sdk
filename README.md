@@ -16,10 +16,6 @@ Using the API, you can integrate Event Streams with any system that supports RES
 
 Documentation [IBM Cloud Eventstreams Service APIs](https://cloud.ibm.com/apidocs/event-streams).
 
-Documentation [IBM Cloud Eventstreams SDK](https://cloud.ibm.com/apidocs/event-streams)
-
-Node.js client library to interact with various [Eventstreams SDK APIs](https://cloud.ibm.com/apidocs?category=eventstreams).
-
 Disclaimer: this SDK is being released initially as a **pre-release** version.
 Changes might occur which impact applications that use this SDK.
 
@@ -180,6 +176,11 @@ export API_KEY="abc123456789"
 # Set the Admin Endpoint to point to your cluster.
 export KAFKA_ADMIN_URL="https://xyzclustername.svc01.region.eventstreams.test.cloud.ibm.com"
 
+```
+
+You will need the extend package, so install using:
+```
+npm install extend
 ```
 
 Run the example
