@@ -4,7 +4,7 @@
 [![npm-version](https://img.shields.io/npm/v/IBM/eventstreams-node-sdk.svg)](https://www.npmjs.com/package/adminrestv1)
 [![codecov](https://codecov.io/gh/IBM/eventstreams-node-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/IBM/eventstreams-node-sdk)
 -->
-# IBM Cloud Eventstreams Node SDK Version 1.0.0
+# IBM Cloud Eventstreams Node SDK Version 1.1.0
 
 ## Introduction
 
@@ -15,9 +15,6 @@ Event Streams provides a REST API to help connect your existing systems to your 
 Using the API, you can integrate Event Streams with any system that supports RESTful APIs.
 
 Documentation [IBM Cloud Eventstreams Service APIs](https://cloud.ibm.com/apidocs/event-streams).
-
-Disclaimer: this SDK is being released initially as a **pre-release** version.
-Changes might occur which impact applications that use this SDK.
 
 ## Table of Contents
 
@@ -114,7 +111,7 @@ operations:
   - [Delete a Kafka topic](#deleting-a-kafka-topic)
   - [Update a Kafka topic configuration](#updating-kafka-topics-configuration)
   - [List which topics are mirrored](#list-current-mirroring-topic-selection)
-  - [Replace selection of topics which are mirrored](#replace-mirroring-topic-selection)
+  - [Replace selection of topics which are mirrored](#replace-selection-of-topics-which-are-mirrored)
   - [List active mirroring topics](#list-active-mirroring-topics)
   
 The Admin REST API is also [documented using swagger](./admin-rest-api.yaml).
@@ -195,21 +192,21 @@ The following sections explain how the REST API works with examples.
 ### Code Setup
 
 ```javascript
-	// Code Setup
-	const HTTP = require('http');
-	const util = require('util');
-	const KAFKA_ADMIN_URL = process.env.KAFKA_ADMIN_URL;
-	const API_KEY = process.env.API_KEY;
-	const BEARER_TOKEN = process.env.BEARER_TOKEN;
-	const NewAdminrestV1 = require('../dist/adminrest/v1');
-	const { BasicAuthenticator } = require('../dist/auth');
-	const { BearerTokenAuthenticator } = require('../dist/auth');
-	const { NoAuthAuthenticator } = require('../dist/auth');
-	const topicName = 'test-topic';
-	let authenticator = new NoAuthAuthenticator({});
-	/* eslint-disable no-console */
-	
-	// Code Setup End
+// Code Setup
+const HTTP = require('http');
+const util = require('util');
+const KAFKA_ADMIN_URL = process.env.KAFKA_ADMIN_URL;
+const API_KEY = process.env.API_KEY;
+const BEARER_TOKEN = process.env.BEARER_TOKEN;
+const NewAdminrestV1 = require('../dist/adminrest/v1');
+const { BasicAuthenticator } = require('../dist/auth');
+const { BearerTokenAuthenticator } = require('../dist/auth');
+const { NoAuthAuthenticator } = require('../dist/auth');
+const topicName = 'test-topic';
+let authenticator = new NoAuthAuthenticator({});
+/* eslint-disable no-console */
+
+// Code Setup End
 ```
 
 
@@ -240,35 +237,35 @@ Use one of the following methods to authenticate:
 Here's an example of how to create the authenticator using either an API key or a BEARER_TOKEN
 
 ```javascript
-	// Create Authenticator
-	if (KAFKA_ADMIN_URL === undefined || !KAFKA_ADMIN_URL) {
-	  console.log('Please set env KAFKA_ADMIN_URL');
-	  throw new Error('error KAFKA_ADMIN_URL not set');
-	}
-	
-	if ((API_KEY === undefined || !API_KEY) && (BEARER_TOKEN === undefined || !BEARER_TOKEN)) {
-	  console.log('Please set either an API_KEY or a BEARER_TOKEN');
-	  throw new Error('error: API_KEY or BEARER_TOKEN not set');
-	}
-	
-	if (API_KEY && BEARER_TOKEN) {
-	  console.log('Please set either an API_KEY or a BEARER_TOKEN not both');
-	  throw new Error('error: API_KEY and BEARER_TOKEN can not both be set');
-	}
-	
-	if (API_KEY) {
-	  // Create an Basic IAM authenticator.
-	  authenticator = new BasicAuthenticator({
-	    username: 'token',
-	    password: API_KEY,
-	  });
-	} else {
-	  // Create an IAM Bearer Token authenticator.
-	  authenticator = new BearerTokenAuthenticator({
-	    bearerToken: BEARER_TOKEN,
-	  });
-	}
-	// End Authenticator
+// Create Authenticator
+if (KAFKA_ADMIN_URL === undefined || !KAFKA_ADMIN_URL) {
+  console.log('Please set env KAFKA_ADMIN_URL');
+  throw new Error('error KAFKA_ADMIN_URL not set');
+}
+
+if ((API_KEY === undefined || !API_KEY) && (BEARER_TOKEN === undefined || !BEARER_TOKEN)) {
+  console.log('Please set either an API_KEY or a BEARER_TOKEN');
+  throw new Error('error: API_KEY or BEARER_TOKEN not set');
+}
+
+if (API_KEY && BEARER_TOKEN) {
+  console.log('Please set either an API_KEY or a BEARER_TOKEN not both');
+  throw new Error('error: API_KEY and BEARER_TOKEN can not both be set');
+}
+
+if (API_KEY) {
+  // Create an Basic IAM authenticator.
+  authenticator = new BasicAuthenticator({
+    username: 'token',
+    password: API_KEY,
+  });
+} else {
+  // Create an IAM Bearer Token authenticator.
+  authenticator = new BearerTokenAuthenticator({
+    bearerToken: BEARER_TOKEN,
+  });
+}
+// End Authenticator
 ```
 
 
@@ -277,13 +274,13 @@ Here's an example of how to create the authenticator using either an API key or 
 Create a new service object.
 
 ```javascript
-	// Create Service
-	// Construct the service client.
-	const adminREST = new NewAdminrestV1({
-	  authenticator,
-	  serviceUrl: KAFKA_ADMIN_URL,
-	});
-	// End Create Service
+// Create Service
+// Construct the service client.
+const adminREST = new NewAdminrestV1({
+  authenticator,
+  serviceUrl: KAFKA_ADMIN_URL,
+});
+// End Create Service
 ```
 
 
@@ -319,31 +316,31 @@ If the request to create a Kafka topic succeeds then HTTP status code 202 (Accep
 #### Example
 
 ```javascript
-	function createTopic(adminREST, topicName) {
-	  console.log('Create Topic');
-	  // Construct the params object for operation createTopic
-	  const name = topicName;
-	  const partitions = 3;
-	  const params = {
-	    name: name,
-	    partitions: partitions,
-	  };
-	
-	  // Call the create topic function on the service.
-	  const createTopicResult = adminREST.createTopic(params);
-	
-	  // Look at the results of the promise.
-	  return createTopicResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-	        console.log('\tname: ' + topicName);
-	      }
-	    },
-	    err => {
-	      console.log('\tError creating topics ' + err);
-	    }
-	  );
-	} // func.end
+function createTopic(adminREST, topicName) {
+  console.log('Create Topic');
+  // Construct the params object for operation createTopic
+  const name = topicName;
+  const partitions = 3;
+  const params = {
+    name: name,
+    partitions: partitions,
+  };
+
+  // Call the create topic function on the service.
+  const createTopicResult = adminREST.createTopic(params);
+
+  // Look at the results of the promise.
+  return createTopicResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+        console.log('\tname: ' + topicName);
+      }
+    },
+    err => {
+      console.log('\tError creating topics ' + err);
+    }
+  );
+} // func.end
 ```
 
 
@@ -372,29 +369,29 @@ of time after the completion of a REST request to delete the topic.
 #### Example
 
 ```javascript
-	function deleteTopic(adminREST, topicName) {
-	  console.log('Delete Topic');
-	
-	  // Construct the params object for operation deleteTopic
-	  const params = {
-	    topicName: topicName,
-	  };
-	
-	  // Call the delete topic function on the service.
-	  const deleteTopicResult = adminREST.deleteTopic(params);
-	
-	  // Look at the results of the promise.
-	  return deleteTopicResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-	        console.log('\tname: ' + topicName);
-	      }
-	    },
-	    err => {
-	      console.log('\tError deleting topic: ' + topicName + 'error: ' + err);
-	    }
-	  );
-	} // func.end
+function deleteTopic(adminREST, topicName) {
+  console.log('Delete Topic');
+
+  // Construct the params object for operation deleteTopic
+  const params = {
+    topicName: topicName,
+  };
+
+  // Call the delete topic function on the service.
+  const deleteTopicResult = adminREST.deleteTopic(params);
+
+  // Look at the results of the promise.
+  return deleteTopicResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+        console.log('\tname: ' + topicName);
+      }
+    },
+    err => {
+      console.log('\tError deleting topic: ' + topicName + 'error: ' + err);
+    }
+  );
+} // func.end
 ```
 
 
@@ -435,34 +432,34 @@ following properties:
 #### Example
 
 ```javascript
-	function listTopics(adminREST) {
-	  console.log('List Topics');
-	
-	  // Construct the params object for operation listTopics.
-	  const params = {
-	    // topicFilter defaults to an empty string to see all topics.
-	    // or you can specify a topic name.
-	    // topicFilter: '<You Topic Name>',
-	  };
-	
-	  // Service operations can now be invoked using the 'adminREST' variable.
-	  // Call listTopics on the service.
-	  const listTopicsResult = adminREST.listTopics(params);
-	
-	  // Look at the results of the promise.
-	  return listTopicsResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-	        for (const val of result.result) {
-	          console.log('\tname: ' + val.name);
-	        }
-	      }
-	    },
-	    err => {
-	      console.log('Error listing topics ' + err);
-	    }
-	  );
-	} // func.end
+function listTopics(adminREST) {
+  console.log('List Topics');
+
+  // Construct the params object for operation listTopics.
+  const params = {
+    // topicFilter defaults to an empty string to see all topics.
+    // or you can specify a topic name.
+    // topicFilter: '<You Topic Name>',
+  };
+
+  // Service operations can now be invoked using the 'adminREST' variable.
+  // Call listTopics on the service.
+  const listTopicsResult = adminREST.listTopics(params);
+
+  // Look at the results of the promise.
+  return listTopicsResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+        for (const val of result.result) {
+          console.log('\tname: ' + val.name);
+        }
+      }
+    },
+    err => {
+      console.log('Error listing topics ' + err);
+    }
+  );
+} // func.end
 ```
 
 
@@ -507,29 +504,29 @@ Expected status codes
 #### Example
 
 ```javascript
-	function topicDetails(adminREST, topicName) {
-	  console.log('Topic Details');
-	
-	  // Construct the params object for operation getTopic
-	  const params = {
-	    topicName: topicName,
-	  };
-	
-	  // Call the get topic function on the service.
-	  const getTopicResult = adminREST.getTopic(params);
-	
-	  // Look at the results of the promise.
-	  return getTopicResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-	        console.log(util.inspect(result.result, false, null, true));
-	      }
-	    },
-	    err => {
-	      console.log('\tError getting topic details: ' + topicName + 'error: ' + err);
-	    }
-	  );
-	} // func.end
+function topicDetails(adminREST, topicName) {
+  console.log('Topic Details');
+
+  // Construct the params object for operation getTopic
+  const params = {
+    topicName: topicName,
+  };
+
+  // Call the get topic function on the service.
+  const getTopicResult = adminREST.getTopic(params);
+
+  // Look at the results of the promise.
+  return getTopicResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+        console.log(util.inspect(result.result, false, null, true));
+      }
+    },
+    err => {
+      console.log('\tError getting topic details: ' + topicName + 'error: ' + err);
+    }
+  );
+} // func.end
 ```
 
 
@@ -561,30 +558,30 @@ Expected status codes
 #### Example
 
 ```javascript
-	function updateTopic(adminREST, topicName) {
-	  console.log('Update Topic Details');
-	  // Construct the params object for operation updateTopic
-	  const newTotalPartitionCount = 6;
-	  const params = {
-	    topicName: topicName,
-	    newTotalPartitionCount: newTotalPartitionCount,
-	  };
-	
-	  // Call the update topic function on the service.
-	  const updateTopicResult = adminREST.updateTopic(params);
-	
-	  // Look at the results of the promise.
-	  return updateTopicResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-	        console.log('\tname: ' + topicName);
-	      }
-	    },
-	    err => {
-	      console.log('\tError updating topic details: ' + topicName + 'error: ' + err);
-	    }
-	  );
-	} // func.end
+function updateTopic(adminREST, topicName) {
+  console.log('Update Topic Details');
+  // Construct the params object for operation updateTopic
+  const newTotalPartitionCount = 6;
+  const params = {
+    topicName: topicName,
+    newTotalPartitionCount: newTotalPartitionCount,
+  };
+
+  // Call the update topic function on the service.
+  const updateTopicResult = adminREST.updateTopic(params);
+
+  // Look at the results of the promise.
+  return updateTopicResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+        console.log('\tname: ' + topicName);
+      }
+    },
+    err => {
+      console.log('\tError updating topic details: ' + topicName + 'error: ' + err);
+    }
+  );
+} // func.end
 ```
 
 
@@ -612,27 +609,27 @@ Expected status codes
 #### Example
 
 ```javascript
-	function getMirroringTopicSelection(adminREST) {
-	  console.log('List Mirroring Topic Selection');
-	  const params = {};
-	
-	  // Call the get mirroring topic selection function on the service.
-	  const getMirroringTopicSelectionResult = adminREST.getMirroringTopicSelection(params);
-	
-	  // Look at the results of the promise.
-	  return getMirroringTopicSelectionResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-	        for (const val of result.result) {
-	          console.log('\tname: ' + val.name);
-	        }
-	      }
-	    },
-	    err => {
-	      console.log('Error listing mirroring topics selection ' + err);
-	    }
-	  );
-	} // func.end
+function getMirroringTopicSelection(adminREST) {
+  console.log('List Mirroring Topic Selection');
+  const params = {};
+
+  // Call the get mirroring topic selection function on the service.
+  const getMirroringTopicSelectionResult = adminREST.getMirroringTopicSelection(params);
+
+  // Look at the results of the promise.
+  return getMirroringTopicSelectionResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+        for (const val of result.result) {
+          console.log('\tname: ' + val.name);
+        }
+      }
+    },
+    err => {
+      console.log('Error listing mirroring topics selection ' + err);
+    }
+  );
+} // func.end
 ```
 
 
@@ -664,29 +661,29 @@ Expected status codes
 #### Example
 
 ```javascript
-	function replaceMirroringTopicSelection(adminREST, topicName) {
-	  console.log('Replace Mirroring Topics');
-	  // Construct the params object for operation replaceMirroringTopicSelection
-	  const includes = topicName;
-	  const params = {
-	    includes: includes,
-	  };
-	
-	  // Call the replace mirroring topic selection on the service.
-	  const replaceMirroringTopicSelectionResult = adminREST.replaceMirroringTopicSelection(params);
-	
-	  // Look at the results of the promise.
-	  return replaceMirroringTopicSelectionResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-	        console.log('\tmirroring topic selection updated ' + topicName);
-	      }
-	    },
-	    err => {
-	      console.log('Error replacing mirroring topics selection ' + err);
-	    }
-	  );
-	} // func.end
+function replaceMirroringTopicSelection(adminREST, topicName) {
+  console.log('Replace Mirroring Topics');
+  // Construct the params object for operation replaceMirroringTopicSelection
+  const includes = topicName;
+  const params = {
+    includes: includes,
+  };
+
+  // Call the replace mirroring topic selection on the service.
+  const replaceMirroringTopicSelectionResult = adminREST.replaceMirroringTopicSelection(params);
+
+  // Look at the results of the promise.
+  return replaceMirroringTopicSelectionResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+        console.log('\tmirroring topic selection updated ' + topicName);
+      }
+    },
+    err => {
+      console.log('Error replacing mirroring topics selection ' + err);
+    }
+  );
+} // func.end
 ```
 
 
@@ -714,27 +711,27 @@ Expected status codes
 #### Example
 
 ```javascript
-	function getListMirroringActiveTopics(adminREST) {
-	  console.log('List Active Mirroring Topic Selection\n');
-	  // Construct the params object for operation getMirroringActiveTopics
-	  const params = {};
-	
-	  // Call the get mirroring active topic function on the service.
-	  const getMirroringActiveTopicsResult = adminREST.getMirroringActiveTopics(params);
-	
-	  // Look at the results of the promise.
-	  return getMirroringActiveTopicsResult.then(
-	    result => {
-	      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-	        for (const val of result.result) {
-	          console.log('\tname: ' + val.name);
-	        }
-	      }
-	    },
-	    err => {
-	      console.log('Error listing active mirroring topics selection ' + err);
-	    }
-	  );
-	} // func.end
+function getListMirroringActiveTopics(adminREST) {
+  console.log('List Active Mirroring Topic Selection\n');
+  // Construct the params object for operation getMirroringActiveTopics
+  const params = {};
+
+  // Call the get mirroring active topic function on the service.
+  const getMirroringActiveTopicsResult = adminREST.getMirroringActiveTopics(params);
+
+  // Look at the results of the promise.
+  return getMirroringActiveTopicsResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+        for (const val of result.result) {
+          console.log('\tname: ' + val.name);
+        }
+      }
+    },
+    err => {
+      console.log('Error listing active mirroring topics selection ' + err);
+    }
+  );
+} // func.end
 ```
 
