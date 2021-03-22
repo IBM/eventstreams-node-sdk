@@ -167,7 +167,7 @@ To run the example :-
 
 Set the required environment variables
 ```sh
-# Set you API KEY.
+# Set your API KEY (or a bearer token could be used by setting the BEARER_TOKEN environment variable instead, but not both)
 export API_KEY="abc123456789"
 
 # Set the Admin Endpoint to point to your cluster.
