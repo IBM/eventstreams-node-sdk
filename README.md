@@ -209,7 +209,6 @@ let authenticator = new NoAuthAuthenticator({});
 // Code Setup End
 ```
 
-
 ### Authentication
 ---
 Use one of the following methods to authenticate:
@@ -268,7 +267,6 @@ if (API_KEY) {
 // End Authenticator
 ```
 
-
 ### Creating a client for the Admin REST API.
 ---
 Create a new service object.
@@ -282,7 +280,6 @@ const adminREST = new NewAdminrestV1({
 });
 // End Create Service
 ```
-
 
 ### Creating a Kafka topic
 ---
@@ -340,9 +337,8 @@ function createTopic(adminREST, topicName) {
       console.log('\tError creating topics ' + err);
     }
   );
-} // func.end
+} 
 ```
-
 
 
 ### Deleting a Kafka topic
@@ -391,9 +387,8 @@ function deleteTopic(adminREST, topicName) {
       console.log('\tError deleting topic: ' + topicName + 'error: ' + err);
     }
   );
-} // func.end
+} 
 ```
-
 
 ### Listing Kafka topics
 ---
@@ -459,9 +454,8 @@ function listTopics(adminREST) {
       console.log('Error listing topics ' + err);
     }
   );
-} // func.end
+} 
 ```
-
 
 ### Getting a Kafka topic
 ---
@@ -526,9 +520,8 @@ function topicDetails(adminREST, topicName) {
       console.log('\tError getting topic details: ' + topicName + 'error: ' + err);
     }
   );
-} // func.end
+} 
 ```
-
 
 ### Updating Kafka topic's configuration
 ---
@@ -581,9 +574,8 @@ function updateTopic(adminREST, topicName) {
       console.log('\tError updating topic details: ' + topicName + 'error: ' + err);
     }
   );
-} // func.end
+} 
 ```
-
 
 ### List current mirroring topic selection
 
@@ -629,9 +621,8 @@ function getMirroringTopicSelection(adminREST) {
       console.log('Error listing mirroring topics selection ' + err);
     }
   );
-} // func.end
+} 
 ```
-
 
 ### Replace selection of topics which are mirrored
 
@@ -683,9 +674,8 @@ function replaceMirroringTopicSelection(adminREST, topicName) {
       console.log('Error replacing mirroring topics selection ' + err);
     }
   );
-} // func.end
+} 
 ```
-
 
 ### List active mirroring topics
 ---
@@ -732,6 +722,5 @@ function getListMirroringActiveTopics(adminREST) {
       console.log('Error listing active mirroring topics selection ' + err);
     }
   );
-} // func.end
+} 
 ```
-
