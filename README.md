@@ -66,7 +66,7 @@ Service Name | Import Path
 ## Installation
 
 ```sh
-npm install eventstreams-sdk
+npm install eventstreams_sdk
 ```
 
 ## Using the SDK
