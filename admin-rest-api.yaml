@@ -9,8 +9,14 @@
 
 swagger: '2.0'
 
+tags:
+  - name: Topic Operations
+    description: Topic Operations
+  - name: Mirroring Operations
+    description: Mirroring Operations
+
 info:
-  version: 1.1.0
+  version: 1.1.1
   title: IBM Event Streams Admin REST API
   description: The administration REST API for IBM Event Streams on Cloud.
   x-alternate-name: adminrest

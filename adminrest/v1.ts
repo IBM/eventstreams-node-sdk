@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021.
+ * (C) Copyright IBM Corp. 2022.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,29 @@
  */
 
 /**
- * IBM OpenAPI SDK Code Generator Version: 3.25.0-2b3f843a-20210115-164628
+ * IBM OpenAPI SDK Code Generator Version: 3.45.0-05af0f12-20220209-193923
  */
-
 
 import * as extend from 'extend';
 import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
-import { Authenticator, BaseService, getAuthenticatorFromEnvironment, getMissingParams, UserOptions } from 'ibm-cloud-sdk-core';
+import {
+  Authenticator,
+  BaseService,
+  getAuthenticatorFromEnvironment,
+  validateParams,
+  UserOptions,
+} from 'ibm-cloud-sdk-core';
 import { getSdkHeaders } from '../lib/common';
 
 /**
  * The administration REST API for IBM Event Streams on Cloud.
+ *
+ * API Version: 1.1.1
  */
 
 class AdminrestV1 extends BaseService {
-
   static DEFAULT_SERVICE_URL: string = 'https://adminrest.cloud.ibm.com';
+
   static DEFAULT_SERVICE_NAME: string = 'adminrest';
 
   /*************************
@@ -63,7 +70,6 @@ class AdminrestV1 extends BaseService {
     }
     return service;
   }
-
 
   /**
    * Construct a AdminrestV1 object.
@@ -104,17 +110,29 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.Empty>>}
    */
-  public createTopic(params?: AdminrestV1.CreateTopicParams): Promise<AdminrestV1.Response<AdminrestV1.Empty>> {
-    const _params = Object.assign({}, params);
+  public createTopic(
+    params?: AdminrestV1.CreateTopicParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.Empty>> {
+    const _params = { ...params };
+    const _requiredParams = [];
+    const _validParams = ['name', 'partitions', 'partitionCount', 'configs', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
 
     const body = {
       'name': _params.name,
       'partitions': _params.partitions,
       'partition_count': _params.partitionCount,
-      'configs': _params.configs
+      'configs': _params.configs,
     };
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'createTopic');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'createTopic'
+    );
 
     const parameters = {
       options: {
@@ -123,15 +141,20 @@ class AdminrestV1 extends BaseService {
         body,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
+  }
 
   /**
    * Get a list of topics.
@@ -150,16 +173,28 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.TopicDetail[]>>}
    */
-  public listTopics(params?: AdminrestV1.ListTopicsParams): Promise<AdminrestV1.Response<AdminrestV1.TopicDetail[]>> {
-    const _params = Object.assign({}, params);
+  public listTopics(
+    params?: AdminrestV1.ListTopicsParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.TopicDetail[]>> {
+    const _params = { ...params };
+    const _requiredParams = [];
+    const _validParams = ['topicFilter', 'perPage', 'page', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
 
     const query = {
       'topic_filter': _params.topicFilter,
       'per_page': _params.perPage,
-      'page': _params.page
+      'page': _params.page,
     };
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'listTopics');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'listTopics'
+    );
 
     const parameters = {
       options: {
@@ -168,14 +203,19 @@ class AdminrestV1 extends BaseService {
         qs: query,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
+  }
 
   /**
    * Get detailed information on a topic.
@@ -187,20 +227,26 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.TopicDetail>>}
    */
-  public getTopic(params: AdminrestV1.GetTopicParams): Promise<AdminrestV1.Response<AdminrestV1.TopicDetail>> {
-    const _params = Object.assign({}, params);
-    const requiredParams = ['topicName'];
-
-    const missingParams = getMissingParams(_params, requiredParams);
-    if (missingParams) {
-      return Promise.reject(missingParams);
+  public getTopic(
+    params: AdminrestV1.GetTopicParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.TopicDetail>> {
+    const _params = { ...params };
+    const _requiredParams = ['topicName'];
+    const _validParams = ['topicName', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
     }
 
     const path = {
-      'topic_name': _params.topicName
+      'topic_name': _params.topicName,
     };
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getTopic');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'getTopic'
+    );
 
     const parameters = {
       options: {
@@ -209,14 +255,19 @@ class AdminrestV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
+  }
 
   /**
    * Delete a topic.
@@ -228,20 +279,26 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.Empty>>}
    */
-  public deleteTopic(params: AdminrestV1.DeleteTopicParams): Promise<AdminrestV1.Response<AdminrestV1.Empty>> {
-    const _params = Object.assign({}, params);
-    const requiredParams = ['topicName'];
-
-    const missingParams = getMissingParams(_params, requiredParams);
-    if (missingParams) {
-      return Promise.reject(missingParams);
+  public deleteTopic(
+    params: AdminrestV1.DeleteTopicParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.Empty>> {
+    const _params = { ...params };
+    const _requiredParams = ['topicName'];
+    const _validParams = ['topicName', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
     }
 
     const path = {
-      'topic_name': _params.topicName
+      'topic_name': _params.topicName,
     };
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteTopic');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'deleteTopic'
+    );
 
     const parameters = {
       options: {
@@ -250,14 +307,19 @@ class AdminrestV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
+  }
 
   /**
    * Increase the number of partitions and/or update one or more topic configuration parameters.
@@ -272,25 +334,31 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.Empty>>}
    */
-  public updateTopic(params: AdminrestV1.UpdateTopicParams): Promise<AdminrestV1.Response<AdminrestV1.Empty>> {
-    const _params = Object.assign({}, params);
-    const requiredParams = ['topicName'];
-
-    const missingParams = getMissingParams(_params, requiredParams);
-    if (missingParams) {
-      return Promise.reject(missingParams);
+  public updateTopic(
+    params: AdminrestV1.UpdateTopicParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.Empty>> {
+    const _params = { ...params };
+    const _requiredParams = ['topicName'];
+    const _validParams = ['topicName', 'newTotalPartitionCount', 'configs', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
     }
 
     const body = {
       'new_total_partition_count': _params.newTotalPartitionCount,
-      'configs': _params.configs
+      'configs': _params.configs,
     };
 
     const path = {
-      'topic_name': _params.topicName
+      'topic_name': _params.topicName,
     };
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'updateTopic');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'updateTopic'
+    );
 
     const parameters = {
       options: {
@@ -300,15 +368,20 @@ class AdminrestV1 extends BaseService {
         path,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
+  }
 
   /**
    * Get current topic selection for mirroring.
@@ -319,10 +392,22 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.MirroringTopicSelection>>}
    */
-  public getMirroringTopicSelection(params?: AdminrestV1.GetMirroringTopicSelectionParams): Promise<AdminrestV1.Response<AdminrestV1.MirroringTopicSelection>> {
-    const _params = Object.assign({}, params);
+  public getMirroringTopicSelection(
+    params?: AdminrestV1.GetMirroringTopicSelectionParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.MirroringTopicSelection>> {
+    const _params = { ...params };
+    const _requiredParams = [];
+    const _validParams = ['headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getMirroringTopicSelection');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'getMirroringTopicSelection'
+    );
 
     const parameters = {
       options: {
@@ -330,14 +415,19 @@ class AdminrestV1 extends BaseService {
         method: 'GET',
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
+  }
 
   /**
    * Replace topic selection for mirroring.
@@ -349,14 +439,26 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.MirroringTopicSelection>>}
    */
-  public replaceMirroringTopicSelection(params?: AdminrestV1.ReplaceMirroringTopicSelectionParams): Promise<AdminrestV1.Response<AdminrestV1.MirroringTopicSelection>> {
-    const _params = Object.assign({}, params);
+  public replaceMirroringTopicSelection(
+    params?: AdminrestV1.ReplaceMirroringTopicSelectionParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.MirroringTopicSelection>> {
+    const _params = { ...params };
+    const _requiredParams = [];
+    const _validParams = ['includes', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
 
     const body = {
-      'includes': _params.includes
+      'includes': _params.includes,
     };
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'replaceMirroringTopicSelection');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'replaceMirroringTopicSelection'
+    );
 
     const parameters = {
       options: {
@@ -365,15 +467,20 @@ class AdminrestV1 extends BaseService {
         body,
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
+  }
 
   /**
    * Get topics that are being actively mirrored.
@@ -384,10 +491,22 @@ class AdminrestV1 extends BaseService {
    * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
    * @returns {Promise<AdminrestV1.Response<AdminrestV1.MirroringActiveTopics>>}
    */
-  public getMirroringActiveTopics(params?: AdminrestV1.GetMirroringActiveTopicsParams): Promise<AdminrestV1.Response<AdminrestV1.MirroringActiveTopics>> {
-    const _params = Object.assign({}, params);
+  public getMirroringActiveTopics(
+    params?: AdminrestV1.GetMirroringActiveTopicsParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.MirroringActiveTopics>> {
+    const _params = { ...params };
+    const _requiredParams = [];
+    const _validParams = ['headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
 
-    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getMirroringActiveTopics');
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'getMirroringActiveTopics'
+    );
 
     const parameters = {
       options: {
@@ -395,15 +514,19 @@ class AdminrestV1 extends BaseService {
         method: 'GET',
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
-        headers: extend(true, sdkHeaders, {
-          'Accept': 'application/json',
-        }, _params.headers),
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
       }),
     };
 
     return this.createRequest(parameters);
-  };
-
+  }
 }
 
 /*************************
@@ -411,9 +534,8 @@ class AdminrestV1 extends BaseService {
  ************************/
 
 namespace AdminrestV1 {
-
   /** An operation response. */
-  export interface Response<T = any>  {
+  export interface Response<T = any> {
     result: T;
     status: number;
     statusText: string;
@@ -424,7 +546,7 @@ namespace AdminrestV1 {
   export type Callback<T> = (error: any, response?: Response<T>) => void;
 
   /** The body of a service request that returns no response data. */
-  export interface Empty { }
+  export interface Empty {}
 
   /** A standard JS object, defined to avoid the limitations of `Object` and `object` */
   export interface JsonObject {
@@ -586,7 +708,6 @@ namespace AdminrestV1 {
     /** The replia assignment of the topic. */
     replicaAssignments?: ReplicaAssignment[];
   }
-
 }
 
 export = AdminrestV1;
