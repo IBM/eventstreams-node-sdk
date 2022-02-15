@@ -2,7 +2,6 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 <!--
 [![npm-version](https://img.shields.io/npm/v/IBM/eventstreams-node-sdk.svg)](https://www.npmjs.com/package/adminrestv1)
-[![codecov](https://codecov.io/gh/IBM/eventstreams-node-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/IBM/eventstreams-node-sdk)
 -->
 # IBM Cloud Eventstreams Node SDK Version 1.1.0
 
