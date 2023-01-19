@@ -2,7 +2,7 @@
 #
 # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#approve-a-pull-request
 # https://github.com/dependabot/fetch-metadata
-name: Dependabot Approve and Merge Alert Fixes
+name: Dependabot Checks
 on: pull_request_target
 
 permissions:
@@ -10,13 +10,13 @@ permissions:
   pull-requests: write
 
 jobs:
-  dependabot:
+  dependabot-approve-and-merge-alert-fixes:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
     - name: Dependabot metadata
       id: metadata
-      uses: dependabot/fetch-metadata@v1.1.1
+      uses: dependabot/fetch-metadata@v1.3.5
       with:
         alert-lookup: true
         github-token: "${{ secrets.GITHUB_TOKEN }}"
