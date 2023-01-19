@@ -1,0 +1,28 @@
+# Automatically review and merge PRs that resolve dependabot vulnerability alerts with minor or patch semver bumps.
+#
+# https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#approve-a-pull-request
+# https://github.com/dependabot/fetch-metadata
+name: Dependabot Approve and Merge Alert Fixes
+on: pull_request_target
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+    - name: Dependabot metadata
+      id: metadata
+      uses: dependabot/fetch-metadata@v1.1.1
+      with:
+        alert-lookup: true
+        github-token: "${{ secrets.GITHUB_TOKEN }}"
+    - name: Approve and enable auto-merge for Dependabot alert PRs
+      if: ${{contains(steps.metadata.outputs.alert-state, 'OPEN') && steps.metadata.outputs.update-type == 'version-update:semver-minor'}}
+      run: gh pr review --approve "$PR_URL" && gh pr merge --auto --merge --squash "$PR_URL"
+      env:
+        PR_URL: ${{github.event.pull_request.html_url}}
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
