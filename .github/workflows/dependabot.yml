@@ -22,7 +22,7 @@ jobs:
         alert-lookup: true
         github-token: "${{ secrets.PAT_GITHUB_TOKEN_ALERT_LOOKUP }}" # PAT token with only security_events scope
     - name: Approve and enable auto-merge for Dependabot alert PRs
-      if: ${{contains(steps.metadata.outputs.alert-state, 'OPEN') && steps.metadata.outputs.update-type == 'version-update:semver-minor'}}
+      if: ${{contains(steps.metadata.outputs.alert-state, 'OPEN') && steps.metadata.outputs.update-type != 'version-update:semver-major'}}
       run: |
         set -eu
         gh pr edit --add-label "security" "$PR_URL"
