@@ -263,16 +263,12 @@ describe('AdminrestV1', () => {
     });
 
     describe('negative tests', () => {
-      test('should enforce required parameters', async done => {
-        let err;
+      test('should enforce required parameters', async () => {
         try {
           await adminrestService.getTopic({});
         } catch (e) {
-          err = e;
+          expect(e.message).toMatch(/Missing required parameters/);
         }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-        done();
       });
 
       test('should reject promise when required params are not given', done => {
@@ -331,16 +327,12 @@ describe('AdminrestV1', () => {
     });
 
     describe('negative tests', () => {
-      test('should enforce required parameters', async done => {
-        let err;
+      test('should enforce required parameters', async () => {
         try {
           await adminrestService.deleteTopic({});
         } catch (e) {
-          err = e;
+          expect(e.message).toMatch(/Missing required parameters/);
         }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-        done();
       });
 
       test('should reject promise when required params are not given', done => {
@@ -414,16 +406,12 @@ describe('AdminrestV1', () => {
     });
 
     describe('negative tests', () => {
-      test('should enforce required parameters', async done => {
-        let err;
+      test('should enforce required parameters', async () => {
         try {
           await adminrestService.updateTopic({});
         } catch (e) {
-          err = e;
+          expect(e.message).toMatch(/Missing required parameters/);
         }
-
-        expect(err.message).toMatch(/Missing required parameters/);
-        done();
       });
 
       test('should reject promise when required params are not given', done => {
