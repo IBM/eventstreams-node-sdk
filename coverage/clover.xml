@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1615470781565" clover="3.2.0">
-  <project timestamp="1615470781565" name="All files">
-    <metrics statements="94" coveredstatements="94" conditionals="20" coveredconditionals="19" methods="12" coveredmethods="12" elements="126" coveredelements="125" complexity="0" loc="94" ncloc="94" packages="2" files="2" classes="2"/>
+<coverage generated="1676354755262" clover="3.2.0">
+  <project timestamp="1676354755262" name="All files">
+    <metrics statements="150" coveredstatements="149" conditionals="19" coveredconditionals="17" methods="17" coveredmethods="17" elements="186" coveredelements="183" complexity="0" loc="150" ncloc="150" packages="2" files="2" classes="2"/>
     <package name="adminrest">
-      <metrics statements="84" coveredstatements="84" conditionals="20" coveredconditionals="19" methods="11" coveredmethods="11"/>
-      <file name="v1.ts" path="/Users/derekhowlett/vnext-git/src/github.com/IBM/eventstreams-node-sdk/adminrest/v1.ts">
-        <metrics statements="84" coveredstatements="84" conditionals="20" coveredconditionals="19" methods="11" coveredmethods="11"/>
+      <metrics statements="140" coveredstatements="139" conditionals="19" coveredconditionals="17" methods="16" coveredmethods="16"/>
+      <file name="v1.ts" path="/Users/sivakurapati/eventstreams-node-sdk/adminrest/v1.ts">
+        <metrics statements="140" coveredstatements="139" conditionals="19" coveredconditionals="17" methods="16" coveredmethods="16"/>
         <line num="22" count="1" type="stmt"/>
         <line num="24" count="1" type="stmt"/>
         <line num="25" count="1" type="stmt"/>
@@ -14,13 +14,13 @@
         <line num="34" count="1" type="stmt"/>
         <line num="50" count="1" type="stmt"/>
         <line num="51" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="53" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="53" count="2" type="cond" truecount="1" falsecount="0"/>
         <line num="54" count="1" type="stmt"/>
-        <line num="56" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="56" count="2" type="cond" truecount="1" falsecount="0"/>
         <line num="57" count="1" type="stmt"/>
         <line num="59" count="2" type="stmt"/>
         <line num="60" count="2" type="stmt"/>
-        <line num="61" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="61" count="2" type="cond" truecount="1" falsecount="0"/>
         <line num="62" count="1" type="stmt"/>
         <line num="64" count="2" type="stmt"/>
         <line num="78" count="5" type="stmt"/>
@@ -45,7 +45,7 @@
         <line num="191" count="4" type="stmt"/>
         <line num="192" count="4" type="stmt"/>
         <line num="194" count="4" type="stmt"/>
-        <line num="195" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="195" count="4" type="cond" truecount="1" falsecount="0"/>
         <line num="196" count="2" type="stmt"/>
         <line num="199" count="2" type="stmt"/>
         <line num="203" count="2" type="stmt"/>
@@ -55,7 +55,7 @@
         <line num="232" count="4" type="stmt"/>
         <line num="233" count="4" type="stmt"/>
         <line num="235" count="4" type="stmt"/>
-        <line num="236" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="236" count="4" type="cond" truecount="1" falsecount="0"/>
         <line num="237" count="2" type="stmt"/>
         <line num="240" count="2" type="stmt"/>
         <line num="244" count="2" type="stmt"/>
@@ -65,7 +65,7 @@
         <line num="276" count="4" type="stmt"/>
         <line num="277" count="4" type="stmt"/>
         <line num="279" count="4" type="stmt"/>
-        <line num="280" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="280" count="4" type="cond" truecount="1" falsecount="0"/>
         <line num="281" count="2" type="stmt"/>
         <line num="284" count="2" type="stmt"/>
         <line num="289" count="2" type="stmt"/>
@@ -88,24 +88,80 @@
         <line num="390" count="3" type="stmt"/>
         <line num="392" count="3" type="stmt"/>
         <line num="404" count="3" type="stmt"/>
-        <line num="407" count="1" type="stmt"/>
-        <line num="592" count="1" type="stmt"/>
+        <line num="425" count="1" type="stmt"/>
+        <line num="428" count="6" type="stmt"/>
+        <line num="429" count="6" type="stmt"/>
+        <line num="430" count="6" type="stmt"/>
+        <line num="431" count="6" type="stmt"/>
+        <line num="432" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="433" count="2" type="stmt"/>
+        <line num="436" count="4" type="stmt"/>
+        <line num="441" count="4" type="stmt"/>
+        <line num="445" count="4" type="stmt"/>
+        <line num="451" count="4" type="stmt"/>
+        <line num="470" count="4" type="stmt"/>
+        <line num="486" count="1" type="stmt"/>
+        <line num="489" count="6" type="stmt"/>
+        <line num="490" count="6" type="stmt"/>
+        <line num="491" count="6" type="stmt"/>
+        <line num="492" count="6" type="stmt"/>
+        <line num="493" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="494" count="2" type="stmt"/>
+        <line num="497" count="4" type="stmt"/>
+        <line num="502" count="4" type="stmt"/>
+        <line num="506" count="4" type="stmt"/>
+        <line num="512" count="4" type="stmt"/>
+        <line num="531" count="4" type="stmt"/>
+        <line num="545" count="1" type="stmt"/>
+        <line num="548" count="6" type="stmt"/>
+        <line num="549" count="6" type="stmt"/>
+        <line num="550" count="6" type="stmt"/>
+        <line num="551" count="6" type="stmt"/>
+        <line num="552" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="553" count="2" type="stmt"/>
+        <line num="556" count="4" type="stmt"/>
+        <line num="560" count="4" type="stmt"/>
+        <line num="566" count="4" type="stmt"/>
+        <line num="583" count="4" type="stmt"/>
+        <line num="597" count="1" type="stmt"/>
+        <line num="600" count="6" type="stmt"/>
+        <line num="601" count="6" type="stmt"/>
+        <line num="602" count="6" type="stmt"/>
+        <line num="603" count="6" type="stmt"/>
+        <line num="604" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="605" count="2" type="stmt"/>
+        <line num="608" count="4" type="stmt"/>
+        <line num="612" count="4" type="stmt"/>
+        <line num="618" count="4" type="stmt"/>
+        <line num="636" count="4" type="stmt"/>
+        <line num="648" count="1" type="stmt"/>
+        <line num="651" count="5" type="stmt"/>
+        <line num="652" count="5" type="stmt"/>
+        <line num="653" count="5" type="stmt"/>
+        <line num="654" count="5" type="stmt"/>
+        <line num="655" count="5" type="cond" truecount="0" falsecount="1"/>
+        <line num="656" count="0" type="stmt"/>
+        <line num="659" count="5" type="stmt"/>
+        <line num="665" count="5" type="stmt"/>
+        <line num="681" count="5" type="stmt"/>
+        <line num="683" count="1" type="stmt"/>
+        <line num="943" count="1" type="stmt"/>
       </file>
     </package>
     <package name="lib">
       <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="common.ts" path="/Users/derekhowlett/vnext-git/src/github.com/IBM/eventstreams-node-sdk/lib/common.ts">
+      <file name="common.ts" path="/Users/sivakurapati/eventstreams-node-sdk/lib/common.ts">
         <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="17" count="2" type="stmt"/>
         <line num="20" count="2" type="stmt"/>
         <line num="43" count="2" type="stmt"/>
-        <line num="44" count="22" type="stmt"/>
-        <line num="45" count="22" type="stmt"/>
-        <line num="46" count="22" type="stmt"/>
-        <line num="47" count="22" type="stmt"/>
-        <line num="48" count="22" type="stmt"/>
-        <line num="50" count="22" type="stmt"/>
-        <line num="54" count="22" type="stmt"/>
+        <line num="44" count="43" type="stmt"/>
+        <line num="45" count="43" type="stmt"/>
+        <line num="46" count="43" type="stmt"/>
+        <line num="47" count="43" type="stmt"/>
+        <line num="48" count="43" type="stmt"/>
+        <line num="50" count="43" type="stmt"/>
+        <line num="54" count="43" type="stmt"/>
       </file>
     </package>
   </project>

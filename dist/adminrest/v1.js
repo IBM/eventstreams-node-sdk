@@ -18,15 +18,28 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 /**
  * IBM OpenAPI SDK Code Generator Version: 3.25.0-2b3f843a-20210115-164628
  */
@@ -78,7 +91,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
             options.serviceName = this.DEFAULT_SERVICE_NAME;
         }
         if (!options.authenticator) {
-            options.authenticator = ibm_cloud_sdk_core_1.getAuthenticatorFromEnvironment(options.serviceName);
+            options.authenticator = (0, ibm_cloud_sdk_core_1.getAuthenticatorFromEnvironment)(options.serviceName);
         }
         var service = new AdminrestV1(options);
         service.configureService(options.serviceName);
@@ -112,7 +125,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
             'partition_count': _params.partitionCount,
             'configs': _params.configs
         };
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'createTopic');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'createTopic');
         var parameters = {
             options: {
                 url: '/admin/topics',
@@ -153,7 +166,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
             'per_page': _params.perPage,
             'page': _params.page
         };
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'listTopics');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'listTopics');
         var parameters = {
             options: {
                 url: '/admin/topics',
@@ -182,14 +195,14 @@ var AdminrestV1 = /** @class */ (function (_super) {
     AdminrestV1.prototype.getTopic = function (params) {
         var _params = Object.assign({}, params);
         var requiredParams = ['topicName'];
-        var missingParams = ibm_cloud_sdk_core_1.getMissingParams(_params, requiredParams);
+        var missingParams = (0, ibm_cloud_sdk_core_1.getMissingParams)(_params, requiredParams);
         if (missingParams) {
             return Promise.reject(missingParams);
         }
         var path = {
             'topic_name': _params.topicName
         };
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getTopic');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getTopic');
         var parameters = {
             options: {
                 url: '/admin/topics/{topic_name}',
@@ -218,14 +231,14 @@ var AdminrestV1 = /** @class */ (function (_super) {
     AdminrestV1.prototype.deleteTopic = function (params) {
         var _params = Object.assign({}, params);
         var requiredParams = ['topicName'];
-        var missingParams = ibm_cloud_sdk_core_1.getMissingParams(_params, requiredParams);
+        var missingParams = (0, ibm_cloud_sdk_core_1.getMissingParams)(_params, requiredParams);
         if (missingParams) {
             return Promise.reject(missingParams);
         }
         var path = {
             'topic_name': _params.topicName
         };
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteTopic');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteTopic');
         var parameters = {
             options: {
                 url: '/admin/topics/{topic_name}',
@@ -257,7 +270,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
     AdminrestV1.prototype.updateTopic = function (params) {
         var _params = Object.assign({}, params);
         var requiredParams = ['topicName'];
-        var missingParams = ibm_cloud_sdk_core_1.getMissingParams(_params, requiredParams);
+        var missingParams = (0, ibm_cloud_sdk_core_1.getMissingParams)(_params, requiredParams);
         if (missingParams) {
             return Promise.reject(missingParams);
         }
@@ -268,7 +281,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
         var path = {
             'topic_name': _params.topicName
         };
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'updateTopic');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'updateTopic');
         var parameters = {
             options: {
                 url: '/admin/topics/{topic_name}',
@@ -297,7 +310,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
      */
     AdminrestV1.prototype.getMirroringTopicSelection = function (params) {
         var _params = Object.assign({}, params);
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getMirroringTopicSelection');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getMirroringTopicSelection');
         var parameters = {
             options: {
                 url: '/admin/mirroring/topic-selection',
@@ -327,7 +340,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
         var body = {
             'includes': _params.includes
         };
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'replaceMirroringTopicSelection');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'replaceMirroringTopicSelection');
         var parameters = {
             options: {
                 url: '/admin/mirroring/topic-selection',
@@ -355,7 +368,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
      */
     AdminrestV1.prototype.getMirroringActiveTopics = function (params) {
         var _params = Object.assign({}, params);
-        var sdkHeaders = common_1.getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getMirroringActiveTopics');
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getMirroringActiveTopics');
         var parameters = {
             options: {
                 url: '/admin/mirroring/active-topics',
@@ -370,6 +383,200 @@ var AdminrestV1 = /** @class */ (function (_super) {
         return this.createRequest(parameters);
     };
     ;
+    /*************************
+     * quotaOperations
+     ************************/
+    /**
+     * Create a new quota.
+     *
+     * Create a new quota.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {number} [params.producerByteRate] - The producer byte rate quota value.
+     * @param {number} [params.consumerByteRate] - The consumer byte rate quota value.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+     */
+    AdminrestV1.prototype.createQuota = function (params) {
+        var _params = __assign({}, params);
+        var _requiredParams = ['entityName'];
+        var _validParams = ['entityName', 'producerByteRate', 'consumerByteRate', 'headers'];
+        var _validationErrors = (0, ibm_cloud_sdk_core_1.validateParams)(_params, _requiredParams, _validParams);
+        if (_validationErrors) {
+            return Promise.reject(_validationErrors);
+        }
+        var body = {
+            'producer_byte_rate': _params.producerByteRate,
+            'consumer_byte_rate': _params.consumerByteRate,
+        };
+        var path = {
+            'entity_name': _params.entityName,
+        };
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'createQuota');
+        var parameters = {
+            options: {
+                url: '/admin/quotas/{entity_name}',
+                method: 'POST',
+                body: body,
+                path: path,
+            },
+            defaultOptions: extend(true, {}, this.baseOptions, {
+                headers: extend(true, sdkHeaders, {
+                    'Content-Type': 'application/json',
+                }, _params.headers),
+            }),
+        };
+        return this.createRequest(parameters);
+    };
+    /**
+     * Update a quota.
+     *
+     * Update an entity's quota.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {number} [params.producerByteRate] - The producer byte rate quota value.
+     * @param {number} [params.consumerByteRate] - The consumer byte rate quota value.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+     */
+    AdminrestV1.prototype.updateQuota = function (params) {
+        var _params = __assign({}, params);
+        var _requiredParams = ['entityName'];
+        var _validParams = ['entityName', 'producerByteRate', 'consumerByteRate', 'headers'];
+        var _validationErrors = (0, ibm_cloud_sdk_core_1.validateParams)(_params, _requiredParams, _validParams);
+        if (_validationErrors) {
+            return Promise.reject(_validationErrors);
+        }
+        var body = {
+            'producer_byte_rate': _params.producerByteRate,
+            'consumer_byte_rate': _params.consumerByteRate,
+        };
+        var path = {
+            'entity_name': _params.entityName,
+        };
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'updateQuota');
+        var parameters = {
+            options: {
+                url: '/admin/quotas/{entity_name}',
+                method: 'PATCH',
+                body: body,
+                path: path,
+            },
+            defaultOptions: extend(true, {}, this.baseOptions, {
+                headers: extend(true, sdkHeaders, {
+                    'Content-Type': 'application/json',
+                }, _params.headers),
+            }),
+        };
+        return this.createRequest(parameters);
+    };
+    /**
+     * Delete a quota.
+     *
+     * Delete an entity's quota.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+     */
+    AdminrestV1.prototype.deleteQuota = function (params) {
+        var _params = __assign({}, params);
+        var _requiredParams = ['entityName'];
+        var _validParams = ['entityName', 'headers'];
+        var _validationErrors = (0, ibm_cloud_sdk_core_1.validateParams)(_params, _requiredParams, _validParams);
+        if (_validationErrors) {
+            return Promise.reject(_validationErrors);
+        }
+        var path = {
+            'entity_name': _params.entityName,
+        };
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'deleteQuota');
+        var parameters = {
+            options: {
+                url: '/admin/quotas/{entity_name}',
+                method: 'DELETE',
+                path: path,
+            },
+            defaultOptions: extend(true, {}, this.baseOptions, {
+                headers: extend(true, sdkHeaders, {}, _params.headers),
+            }),
+        };
+        return this.createRequest(parameters);
+    };
+    /**
+     * Get quota information for an entity.
+     *
+     * Get quota information for an entity.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.QuotaDetail>>}
+     */
+    AdminrestV1.prototype.getQuota = function (params) {
+        var _params = __assign({}, params);
+        var _requiredParams = ['entityName'];
+        var _validParams = ['entityName', 'headers'];
+        var _validationErrors = (0, ibm_cloud_sdk_core_1.validateParams)(_params, _requiredParams, _validParams);
+        if (_validationErrors) {
+            return Promise.reject(_validationErrors);
+        }
+        var path = {
+            'entity_name': _params.entityName,
+        };
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getQuota');
+        var parameters = {
+            options: {
+                url: '/admin/quotas/{entity_name}',
+                method: 'GET',
+                path: path,
+            },
+            defaultOptions: extend(true, {}, this.baseOptions, {
+                headers: extend(true, sdkHeaders, {
+                    'Accept': 'application/json',
+                }, _params.headers),
+            }),
+        };
+        return this.createRequest(parameters);
+    };
+    /**
+     * List each entity's quota information.
+     *
+     * List each entity's quota information.
+     *
+     * @param {Object} [params] - The parameters to send to the service.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EntityQuotasList>>}
+     */
+    AdminrestV1.prototype.listQuotas = function (params) {
+        var _params = __assign({}, params);
+        var _requiredParams = [];
+        var _validParams = ['headers'];
+        var _validationErrors = (0, ibm_cloud_sdk_core_1.validateParams)(_params, _requiredParams, _validParams);
+        if (_validationErrors) {
+            return Promise.reject(_validationErrors);
+        }
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'listQuotas');
+        var parameters = {
+            options: {
+                url: '/admin/quotas',
+                method: 'GET',
+            },
+            defaultOptions: extend(true, {}, this.baseOptions, {
+                headers: extend(true, sdkHeaders, {
+                    'Accept': 'application/json',
+                }, _params.headers),
+            }),
+        };
+        return this.createRequest(parameters);
+    };
     AdminrestV1.DEFAULT_SERVICE_URL = 'https://adminrest.cloud.ibm.com';
     AdminrestV1.DEFAULT_SERVICE_NAME = 'adminrest';
     return AdminrestV1;

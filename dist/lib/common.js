@@ -43,7 +43,7 @@ function getSdkHeaders(serviceName, serviceVersion, operationId) {
     var osVersion = os.release();
     var nodeVersion = process.version;
     var headers = {
-        'User-Agent': sdkName + "/" + sdkVersion + " (lang=node.js; os.name=" + osName + " os.version=" + osVersion + " node.version=" + nodeVersion + ")",
+        'User-Agent': "".concat(sdkName, "/").concat(sdkVersion, " (lang=node.js; os.name=").concat(osName, " os.version=").concat(osVersion, " node.version=").concat(nodeVersion, ")"),
     };
     return headers;
 }

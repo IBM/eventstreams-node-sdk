@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export declare type SdkHeaders = {
+export type SdkHeaders = {
     'User-Agent': string;
 };
 /**

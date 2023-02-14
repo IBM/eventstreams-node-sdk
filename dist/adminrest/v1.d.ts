@@ -149,6 +149,71 @@ declare class AdminrestV1 extends BaseService {
      * @returns {Promise<AdminrestV1.Response<AdminrestV1.MirroringActiveTopics>>}
      */
     getMirroringActiveTopics(params?: AdminrestV1.GetMirroringActiveTopicsParams): Promise<AdminrestV1.Response<AdminrestV1.MirroringActiveTopics>>;
+    /*************************
+     * quotaOperations
+     ************************/
+    /**
+     * Create a new quota.
+     *
+     * Create a new quota.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {number} [params.producerByteRate] - The producer byte rate quota value.
+     * @param {number} [params.consumerByteRate] - The consumer byte rate quota value.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+     */
+    createQuota(params: AdminrestV1.CreateQuotaParams): Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>;
+    /**
+     * Update a quota.
+     *
+     * Update an entity's quota.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {number} [params.producerByteRate] - The producer byte rate quota value.
+     * @param {number} [params.consumerByteRate] - The consumer byte rate quota value.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+     */
+    updateQuota(params: AdminrestV1.UpdateQuotaParams): Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>;
+    /**
+     * Delete a quota.
+     *
+     * Delete an entity's quota.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+     */
+    deleteQuota(params: AdminrestV1.DeleteQuotaParams): Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>;
+    /**
+     * Get quota information for an entity.
+     *
+     * Get quota information for an entity.
+     *
+     * @param {Object} params - The parameters to send to the service.
+     * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+     * with an `iam-ServiceId` prefix.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.QuotaDetail>>}
+     */
+    getQuota(params: AdminrestV1.GetQuotaParams): Promise<AdminrestV1.Response<AdminrestV1.QuotaDetail>>;
+    /**
+     * List each entity's quota information.
+     *
+     * List each entity's quota information.
+     *
+     * @param {Object} [params] - The parameters to send to the service.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.EntityQuotasList>>}
+     */
+    listQuotas(params?: AdminrestV1.ListQuotasParams): Promise<AdminrestV1.Response<AdminrestV1.EntityQuotasList>>;
 }
 /*************************
  * interfaces
@@ -169,6 +234,9 @@ declare namespace AdminrestV1 {
     /** A standard JS object, defined to avoid the limitations of `Object` and `object` */
     interface JsonObject {
         [key: string]: any;
+    }
+    /** The body of a service request that returns no response data. */
+    interface EmptyObject {
     }
     /*************************
      * request interfaces
@@ -236,6 +304,50 @@ declare namespace AdminrestV1 {
     }
     /** Parameters for the `getMirroringActiveTopics` operation. */
     interface GetMirroringActiveTopicsParams {
+        headers?: OutgoingHttpHeaders;
+    }
+    /** Parameters for the `createQuota` operation. */
+    interface CreateQuotaParams {
+        /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+         *  prefix.
+         */
+        entityName: string;
+        /** The producer byte rate quota value. */
+        producerByteRate?: number;
+        /** The consumer byte rate quota value. */
+        consumerByteRate?: number;
+        headers?: OutgoingHttpHeaders;
+    }
+    /** Parameters for the `updateQuota` operation. */
+    interface UpdateQuotaParams {
+        /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+         *  prefix.
+         */
+        entityName: string;
+        /** The producer byte rate quota value. */
+        producerByteRate?: number;
+        /** The consumer byte rate quota value. */
+        consumerByteRate?: number;
+        headers?: OutgoingHttpHeaders;
+    }
+    /** Parameters for the `deleteQuota` operation. */
+    interface DeleteQuotaParams {
+        /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+         *  prefix.
+         */
+        entityName: string;
+        headers?: OutgoingHttpHeaders;
+    }
+    /** Parameters for the `getQuota` operation. */
+    interface GetQuotaParams {
+        /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+         *  prefix.
+         */
+        entityName: string;
+        headers?: OutgoingHttpHeaders;
+    }
+    /** Parameters for the `listQuotas` operation. */
+    interface ListQuotasParams {
         headers?: OutgoingHttpHeaders;
     }
     /*************************
@@ -307,6 +419,26 @@ declare namespace AdminrestV1 {
         configs?: TopicConfigs;
         /** The replia assignment of the topic. */
         replicaAssignments?: ReplicaAssignment[];
+    }
+    /** EntityQuotaDetail. */
+    interface EntityQuotaDetail {
+        /** The name of the entity. */
+        entity_name: string;
+        /** The producer byte rate quota value. */
+        producer_byte_rate?: number;
+        /** The consumer byte rate quota value. */
+        consumer_byte_rate?: number;
+    }
+    /** A list of 'entity_quota_detail' is returned. */
+    interface EntityQuotasList {
+        data?: EntityQuotaDetail[];
+    }
+    /** QuotaDetail. */
+    interface QuotaDetail {
+        /** The producer byte rate quota value. */
+        producer_byte_rate?: number;
+        /** The consumer byte rate quota value. */
+        consumer_byte_rate?: number;
     }
 }
 export = AdminrestV1;
