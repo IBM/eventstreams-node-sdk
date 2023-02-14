@@ -21,7 +21,7 @@
 
 import * as extend from 'extend';
 import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
-import { Authenticator, BaseService, getAuthenticatorFromEnvironment, getMissingParams, UserOptions } from 'ibm-cloud-sdk-core';
+import { Authenticator, BaseService, getAuthenticatorFromEnvironment, getMissingParams, UserOptions, validateParams } from 'ibm-cloud-sdk-core';
 import { getSdkHeaders } from '../lib/common';
 
 /**
@@ -404,6 +404,282 @@ class AdminrestV1 extends BaseService {
     return this.createRequest(parameters);
   };
 
+
+  /*************************
+   * quotaOperations
+   ************************/
+
+  /**
+   * Create a new quota.
+   *
+   * Create a new quota.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+   * with an `iam-ServiceId` prefix.
+   * @param {number} [params.producerByteRate] - The producer byte rate quota value.
+   * @param {number} [params.consumerByteRate] - The consumer byte rate quota value.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+   */
+   public createQuota(
+    params: AdminrestV1.CreateQuotaParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>> {
+    const _params = { ...params };
+    const _requiredParams = ['entityName'];
+    const _validParams = ['entityName', 'producerByteRate', 'consumerByteRate', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const body = {
+      'producer_byte_rate': _params.producerByteRate,
+      'consumer_byte_rate': _params.consumerByteRate,
+    };
+
+    const path = {
+      'entity_name': _params.entityName,
+    };
+
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'createQuota'
+    );
+
+    const parameters = {
+      options: {
+        url: '/admin/quotas/{entity_name}',
+        method: 'POST',
+        body,
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * Update a quota.
+   *
+   * Update an entity's quota.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+   * with an `iam-ServiceId` prefix.
+   * @param {number} [params.producerByteRate] - The producer byte rate quota value.
+   * @param {number} [params.consumerByteRate] - The consumer byte rate quota value.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+   */
+  public updateQuota(
+    params: AdminrestV1.UpdateQuotaParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>> {
+    const _params = { ...params };
+    const _requiredParams = ['entityName'];
+    const _validParams = ['entityName', 'producerByteRate', 'consumerByteRate', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const body = {
+      'producer_byte_rate': _params.producerByteRate,
+      'consumer_byte_rate': _params.consumerByteRate,
+    };
+
+    const path = {
+      'entity_name': _params.entityName,
+    };
+
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'updateQuota'
+    );
+
+    const parameters = {
+      options: {
+        url: '/admin/quotas/{entity_name}',
+        method: 'PATCH',
+        body,
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Content-Type': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * Delete a quota.
+   *
+   * Delete an entity's quota.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+   * with an `iam-ServiceId` prefix.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>>}
+   */
+  public deleteQuota(
+    params: AdminrestV1.DeleteQuotaParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.EmptyObject>> {
+    const _params = { ...params };
+    const _requiredParams = ['entityName'];
+    const _validParams = ['entityName', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const path = {
+      'entity_name': _params.entityName,
+    };
+
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'deleteQuota'
+    );
+
+    const parameters = {
+      options: {
+        url: '/admin/quotas/{entity_name}',
+        method: 'DELETE',
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * Get quota information for an entity.
+   *
+   * Get quota information for an entity.
+   *
+   * @param {Object} params - The parameters to send to the service.
+   * @param {string} params.entityName - The entity name of the quotas can be `default` or an IAM Service ID that starts
+   * with an `iam-ServiceId` prefix.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<AdminrestV1.Response<AdminrestV1.QuotaDetail>>}
+   */
+  public getQuota(
+    params: AdminrestV1.GetQuotaParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.QuotaDetail>> {
+    const _params = { ...params };
+    const _requiredParams = ['entityName'];
+    const _validParams = ['entityName', 'headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const path = {
+      'entity_name': _params.entityName,
+    };
+
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'getQuota'
+    );
+
+    const parameters = {
+      options: {
+        url: '/admin/quotas/{entity_name}',
+        method: 'GET',
+        path,
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * List each entity's quota information.
+   *
+   * List each entity's quota information.
+   *
+   * @param {Object} [params] - The parameters to send to the service.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<AdminrestV1.Response<AdminrestV1.EntityQuotasList>>}
+   */
+  public listQuotas(
+    params?: AdminrestV1.ListQuotasParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.EntityQuotasList>> {
+    const _params = { ...params };
+    const _requiredParams = [];
+    const _validParams = ['headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const sdkHeaders = getSdkHeaders(
+      AdminrestV1.DEFAULT_SERVICE_NAME,
+      'v1',
+      'listQuotas'
+    );
+
+    const parameters = {
+      options: {
+        url: '/admin/quotas',
+        method: 'GET',
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+    return this.createRequest(parameters);
+  }
 }
 
 /*************************
@@ -430,6 +706,9 @@ namespace AdminrestV1 {
   export interface JsonObject {
     [key: string]: any;
   }
+
+  /** The body of a service request that returns no response data. */
+  export interface EmptyObject {}
 
   /*************************
    * request interfaces
@@ -505,6 +784,55 @@ namespace AdminrestV1 {
 
   /** Parameters for the `getMirroringActiveTopics` operation. */
   export interface GetMirroringActiveTopicsParams {
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `createQuota` operation. */
+  export interface CreateQuotaParams {
+    /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+     *  prefix.
+     */
+    entityName: string;
+    /** The producer byte rate quota value. */
+    producerByteRate?: number;
+    /** The consumer byte rate quota value. */
+    consumerByteRate?: number;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `updateQuota` operation. */
+  export interface UpdateQuotaParams {
+    /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+     *  prefix.
+     */
+    entityName: string;
+    /** The producer byte rate quota value. */
+    producerByteRate?: number;
+    /** The consumer byte rate quota value. */
+    consumerByteRate?: number;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `deleteQuota` operation. */
+  export interface DeleteQuotaParams {
+    /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+     *  prefix.
+     */
+    entityName: string;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `getQuota` operation. */
+  export interface GetQuotaParams {
+    /** The entity name of the quotas can be `default` or an IAM Service ID that starts with an `iam-ServiceId`
+     *  prefix.
+     */
+    entityName: string;
+    headers?: OutgoingHttpHeaders;
+  }
+
+  /** Parameters for the `listQuotas` operation. */
+  export interface ListQuotasParams {
     headers?: OutgoingHttpHeaders;
   }
 
@@ -587,6 +915,28 @@ namespace AdminrestV1 {
     replicaAssignments?: ReplicaAssignment[];
   }
 
+  /** EntityQuotaDetail. */
+  export interface EntityQuotaDetail {
+    /** The name of the entity. */
+    entity_name: string;
+    /** The producer byte rate quota value. */
+    producer_byte_rate?: number;
+    /** The consumer byte rate quota value. */
+    consumer_byte_rate?: number;
+  }
+
+  /** A list of 'entity_quota_detail' is returned. */
+  export interface EntityQuotasList {
+    data?: EntityQuotaDetail[];
+  }
+
+  /** QuotaDetail. */
+  export interface QuotaDetail {
+    /** The producer byte rate quota value. */
+    producer_byte_rate?: number;
+    /** The consumer byte rate quota value. */
+    consumer_byte_rate?: number;
+  }
 }
 
 export = AdminrestV1;

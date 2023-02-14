@@ -28,6 +28,7 @@ const { NoAuthAuthenticator } = require('../dist/auth');
 const topicName = 'test-topic';
 let authenticator = new NoAuthAuthenticator({});
 /* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 
 // Code Setup End
 
@@ -77,7 +78,25 @@ listTopics(adminREST).then(() => {
         updateTopic(adminREST, topicName).then(() => {
           topicDetails(adminREST, topicName).then(() => {
             deleteTopic(adminREST, topicName).then(() => {
-              listTopics(adminREST);
+              listTopics(adminREST).then(() => {
+                // Uncomment these examples if you are running against an Event Streams Enterprise plan instance
+                // const testEntityName = 'iam-ServiceId-12345678-aaaa-bbbb-cccc-1234567890xy';
+                // listQuotas(adminREST).then(() => {
+                //   createQuota(adminREST, testEntityName).then(() => {
+                //     listQuotas(adminREST).then(() => {
+                //       quotaDetails(adminREST, testEntityName).then(() => {
+                //         updateQuota(adminREST, testEntityName).then(() => {
+                //           quotaDetails(adminREST, testEntityName).then(() => {
+                //             deleteQuota(adminREST, testEntityName).then(() => {
+                //               listQuotas(adminREST);
+                //             });
+                //           });
+                //         });
+                //       });
+                //     });
+                //   });
+                // });
+              });
             });
           });
         });
@@ -224,8 +243,6 @@ function updateTopic(adminREST, topicName) {
   );
 } // func.end
 
-/* eslint-disable no-unused-vars */
-
 /** @getListMirroringActiveTopics */
 function getListMirroringActiveTopics(adminREST) {
   console.log('List Active Mirroring Topic Selection\n');
@@ -297,4 +314,140 @@ function getMirroringTopicSelection(adminREST) {
     }
   );
 } // func.end
+
+/** @listQuotas */
+function listQuotas(adminREST) {
+  console.log('List Quotas');
+
+  // Construct the params object for operation listQuotas.
+  const params = {};
+
+  // Service operations can now be invoked using the 'adminREST' variable.
+  // Call listQuotas on the service.
+  const llistQuotasResult = adminREST.listQuotas(params);
+
+  // Look at the results of the promise.
+  return llistQuotasResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+        for (const val of result.result.data) {
+          let quotaDetail = '\tentity_name: ' + val.entity_name;
+          if (val.producer_byte_rate) {
+            quotaDetail += ', producer_byte_rate: ' + val.producer_byte_rate;
+          }
+          if (val.consumer_byte_rate) {
+            quotaDetail += ', consumer_byte_rate: ' + val.consumer_byte_rate;
+          }
+          console.log(quotaDetail);
+        }
+      }
+    },
+    err => {
+      console.log('Error listing quotas ' + err);
+    }
+  );
+} // func.end
+
+/** @createQuota */
+function createQuota(adminREST, entityName) {
+  console.log('Create Quota');
+  // Construct the params object for operation createQuota
+  const params = {
+    entityName: entityName,
+    producerByteRate: 1024,
+    consumerByteRate: 1024,
+  };
+
+  // Call the create quota function on the service.
+  const createQuotaResult = adminREST.createQuota(params);
+
+  // Look at the results of the promise.
+  return createQuotaResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'Created') {
+        console.log('\tentity_name: ' + entityName);
+      }
+    },
+    err => {
+      console.log('\tError creating quota ' + err);
+    }
+  );
+} // func.end
+
+/** @deleteQuota */
+function deleteQuota(adminREST, entityName) {
+  console.log('Delete Quota');
+
+  // Construct the params object for operation deleteTopic
+  const params = {
+    entityName: entityName,
+  };
+
+  // Call the delete quota function on the service.
+  const deleteQuotaResult = adminREST.deleteQuota(params);
+
+  // Look at the results of the promise.
+  return deleteQuotaResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+        console.log('\tentity_name: ' + entityName);
+      }
+    },
+    err => {
+      console.log('\tError deleting quota: ' + err);
+    }
+  );
+} // func.end
+
+/** @quotaDetails */
+function quotaDetails(adminREST, entityName) {
+  console.log('Quota Details');
+
+  // Construct the params object for operation getQuota
+  const params = {
+    entityName: entityName,
+  };
+
+  // Call the get quota function on the service.
+  const getQuotaResult = adminREST.getQuota(params);
+
+  // Look at the results of the promise.
+  return getQuotaResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+        console.log('\t' + util.inspect(result.result, false, null, true));
+      }
+    },
+    err => {
+      console.log('\tError getting quota details: ' + err);
+    }
+  );
+} // func.end
+
+/** @updateQuota */
+function updateQuota(adminREST, entityName) {
+  console.log('Update Quota Details');
+  // Construct the params object for operation updateQuota
+  const params = {
+    entityName: entityName,
+    producerByteRate: 2048,
+    consumerByteRate: 2048,
+  };
+
+  // Call the update quota function on the service.
+  const updateQuotaResult = adminREST.updateQuota(params);
+
+  // Look at the results of the promise.
+  return updateQuotaResult.then(
+    result => {
+      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
+        console.log('\tentity_name: ' + entityName);
+      }
+    },
+    err => {
+      console.log('\tError updating quota details: ' + err);
+    }
+  );
+} // func.end
+
 /* eslint-enable no-unused-vars */

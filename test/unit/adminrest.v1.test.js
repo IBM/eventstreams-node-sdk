@@ -565,4 +565,412 @@ describe('AdminrestV1', () => {
       });
     });
   });
+
+  describe('createQuota', () => {
+    describe('positive tests', () => {
+      function __createQuotaTest() {
+        // Construct the params object for operation createQuota
+        const entityName = 'testString';
+        const producerByteRate = 1024;
+        const consumerByteRate = 1024;
+        const createQuotaParams = {
+          entityName,
+          producerByteRate,
+          consumerByteRate,
+        };
+
+        const createQuotaResult = adminrestService.createQuota(createQuotaParams);
+
+        // all methods should return a Promise
+        expectToBePromise(createQuotaResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/quotas/{entity_name}', 'POST');
+        const expectedAccept = undefined;
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.producer_byte_rate).toEqual(producerByteRate);
+        expect(mockRequestOptions.body.consumer_byte_rate).toEqual(consumerByteRate);
+        expect(mockRequestOptions.path.entity_name).toEqual(entityName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __createQuotaTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __createQuotaTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __createQuotaTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const entityName = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const createQuotaParams = {
+          entityName,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.createQuota(createQuotaParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.createQuota({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.createQuota();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('updateQuota', () => {
+    describe('positive tests', () => {
+      function __updateQuotaTest() {
+        // Construct the params object for operation updateQuota
+        const entityName = 'testString';
+        const producerByteRate = 1024;
+        const consumerByteRate = 1024;
+        const updateQuotaParams = {
+          entityName,
+          producerByteRate,
+          consumerByteRate,
+        };
+
+        const updateQuotaResult = adminrestService.updateQuota(updateQuotaParams);
+
+        // all methods should return a Promise
+        expectToBePromise(updateQuotaResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/quotas/{entity_name}', 'PATCH');
+        const expectedAccept = undefined;
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.producer_byte_rate).toEqual(producerByteRate);
+        expect(mockRequestOptions.body.consumer_byte_rate).toEqual(consumerByteRate);
+        expect(mockRequestOptions.path.entity_name).toEqual(entityName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __updateQuotaTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __updateQuotaTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __updateQuotaTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const entityName = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const updateQuotaParams = {
+          entityName,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.updateQuota(updateQuotaParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.updateQuota({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.updateQuota();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('deleteQuota', () => {
+    describe('positive tests', () => {
+      function __deleteQuotaTest() {
+        // Construct the params object for operation deleteQuota
+        const entityName = 'testString';
+        const deleteQuotaParams = {
+          entityName,
+        };
+
+        const deleteQuotaResult = adminrestService.deleteQuota(deleteQuotaParams);
+
+        // all methods should return a Promise
+        expectToBePromise(deleteQuotaResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/quotas/{entity_name}', 'DELETE');
+        const expectedAccept = undefined;
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.entity_name).toEqual(entityName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __deleteQuotaTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __deleteQuotaTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __deleteQuotaTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const entityName = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const deleteQuotaParams = {
+          entityName,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.deleteQuota(deleteQuotaParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.deleteQuota({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.deleteQuota();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('getQuota', () => {
+    describe('positive tests', () => {
+      function __getQuotaTest() {
+        // Construct the params object for operation getQuota
+        const entityName = 'testString';
+        const getQuotaParams = {
+          entityName,
+        };
+
+        const getQuotaResult = adminrestService.getQuota(getQuotaParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getQuotaResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/quotas/{entity_name}', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.entity_name).toEqual(entityName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getQuotaTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getQuotaTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getQuotaTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const entityName = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getQuotaParams = {
+          entityName,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getQuota(getQuotaParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.getQuota({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.getQuota();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('listQuotas', () => {
+    describe('positive tests', () => {
+      function __listQuotasTest() {
+        // Construct the params object for operation listQuotas
+        const listQuotasParams = {};
+
+        const listQuotasResult = adminrestService.listQuotas(listQuotasParams);
+
+        // all methods should return a Promise
+        expectToBePromise(listQuotasResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/quotas', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listQuotasTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __listQuotasTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __listQuotasTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listQuotasParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.listQuotas(listQuotasParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.listQuotas({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
 });
