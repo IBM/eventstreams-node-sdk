@@ -1,28 +1,26 @@
 language: node_js
 
-sudo: false
+dist: focal
+
+# Remove this if using external Travis
+group: focal
+
 
 node_js:
-- 14
-- 16
+# - 14
+# - 16
+# - 18
 
+# remove the "echo" command from the "before_install" section below.
 before_install:
-- echo -e "machine github.ibm.com\n  login $GITHUB_OAUTH_TOKEN" > ~/.netrc
-# -  'openssl aes-256-cbc -K $my_key -iv $my_iv -in myservice.env.enc -out myservice.env -d || true'
+- echo -e "machine github.ibm.com\n  login $GITHUB_ACCESS_TOKEN" > ~/.netrc
+- wget -qO - https://package.perforce.com/perforce.pubkey | sudo apt-key add -
+- npm i -g npm@8
+- npm --version
 
 script:
 - npm run build
 - npm run test-travis || travis_terminate 1
 - npm run lint
 - npm run check-packages
-# - sh scripts/typedoc/generate_typedoc.sh currently in progress
 
-
-# To enable semantic-release, uncomment this section.
-# deploy:
-# - provider: script
-#   skip_cleanup: true
-#   script: npx semantic-release
-#   on:
-#     node: 12
-#     branch: main
