@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2021.
+ * (C) Copyright IBM Corp. 2023.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
 
 // need to import the whole package to mock getAuthenticatorFromEnvironment
-const core = require('ibm-cloud-sdk-core');
-const { NoAuthAuthenticator, unitTestUtils } = core;
+const sdkCorePackage = require('ibm-cloud-sdk-core');
+
+const { NoAuthAuthenticator, unitTestUtils } = sdkCorePackage;
 
 const AdminrestV1 = require('../../dist/adminrest/v1');
 
@@ -29,27 +29,37 @@ const {
   checkForSuccessfulExecution,
 } = unitTestUtils;
 
-const service = {
+const adminrestServiceOptions = {
   authenticator: new NoAuthAuthenticator(),
-  url: 'https://adminrest.cloud.ibm.com',
+  url: 'ibm.com/123456',
 };
 
-const adminrestService = new AdminrestV1(service);
+const adminrestService = new AdminrestV1(adminrestServiceOptions);
 
-// dont actually create a request
-const createRequestMock = jest.spyOn(adminrestService, 'createRequest');
-createRequestMock.mockImplementation(() => Promise.resolve());
+let createRequestMock = null;
+function mock_createRequest() {
+  if (!createRequestMock) {
+    createRequestMock = jest.spyOn(adminrestService, 'createRequest');
+    createRequestMock.mockImplementation(() => Promise.resolve());
+  }
+}
 
 // dont actually construct an authenticator
-const getAuthenticatorMock = jest.spyOn(core, 'getAuthenticatorFromEnvironment');
+const getAuthenticatorMock = jest.spyOn(sdkCorePackage, 'getAuthenticatorFromEnvironment');
 getAuthenticatorMock.mockImplementation(() => new NoAuthAuthenticator());
 
-afterEach(() => {
-  createRequestMock.mockClear();
-  getAuthenticatorMock.mockClear();
-});
-
 describe('AdminrestV1', () => {
+  beforeEach(() => {
+    mock_createRequest();
+  });
+
+  afterEach(() => {
+    if (createRequestMock) {
+      createRequestMock.mockClear();
+    }
+    getAuthenticatorMock.mockClear();
+  });
+
   describe('the newInstance method', () => {
     test('should use defaults when options not provided', () => {
       const testInstance = AdminrestV1.newInstance();
@@ -77,6 +87,7 @@ describe('AdminrestV1', () => {
       expect(testInstance).toBeInstanceOf(AdminrestV1);
     });
   });
+
   describe('the constructor', () => {
     test('use user-given service url', () => {
       const options = {
@@ -99,30 +110,31 @@ describe('AdminrestV1', () => {
       expect(testInstance.baseOptions.serviceUrl).toBe(AdminrestV1.DEFAULT_SERVICE_URL);
     });
   });
+
   describe('createTopic', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // ConfigCreate
-      const configCreateModel = {
+      // TopicCreateRequestConfigsItem
+      const topicCreateRequestConfigsItemModel = {
         name: 'testString',
         value: 'testString',
       };
 
-      test('should pass the right params to createRequest', () => {
+      function __createTopicTest() {
         // Construct the params object for operation createTopic
         const name = 'testString';
         const partitions = 26;
         const partitionCount = 1;
-        const configs = [configCreateModel];
-        const params = {
-          name: name,
-          partitions: partitions,
-          partitionCount: partitionCount,
-          configs: configs,
+        const configs = [topicCreateRequestConfigsItemModel];
+        const createTopicParams = {
+          name,
+          partitions,
+          partitionCount,
+          configs,
         };
 
-        const createTopicResult = adminrestService.createTopic(params);
+        const createTopicResult = adminrestService.createTopic(createTopicParams);
 
         // all methods should return a Promise
         expectToBePromise(createTopicResult);
@@ -130,30 +142,45 @@ describe('AdminrestV1', () => {
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
-        const options = getOptions(createRequestMock);
+        const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(options, '/admin/topics', 'POST');
-        const expectedAccept = 'application/json';
+        checkUrlAndMethod(mockRequestOptions, '/admin/topics', 'POST');
+        const expectedAccept = undefined;
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(options.body['name']).toEqual(name);
-        expect(options.body['partitions']).toEqual(partitions);
-        expect(options.body['partition_count']).toEqual(partitionCount);
-        expect(options.body['configs']).toEqual(configs);
+        expect(mockRequestOptions.body.name).toEqual(name);
+        expect(mockRequestOptions.body.partitions).toEqual(partitions);
+        expect(mockRequestOptions.body.partition_count).toEqual(partitionCount);
+        expect(mockRequestOptions.body.configs).toEqual(configs);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __createTopicTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __createTopicTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __createTopicTest();
       });
 
       test('should prioritize user-given headers', () => {
         // parameters
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const params = {
+        const createTopicParams = {
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
           },
         };
 
-        adminrestService.createTopic(params);
+        adminrestService.createTopic(createTopicParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
 
@@ -164,20 +191,81 @@ describe('AdminrestV1', () => {
       });
     });
   });
+
+  describe('alive', () => {
+    describe('positive tests', () => {
+      function __aliveTest() {
+        // Construct the params object for operation alive
+        const aliveParams = {};
+
+        const aliveResult = adminrestService.alive(aliveParams);
+
+        // all methods should return a Promise
+        expectToBePromise(aliveResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/alive', 'GET');
+        const expectedAccept = undefined;
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __aliveTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __aliveTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __aliveTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const aliveParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.alive(aliveParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.alive({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
   describe('listTopics', () => {
     describe('positive tests', () => {
-      test('should pass the right params to createRequest', () => {
+      function __listTopicsTest() {
         // Construct the params object for operation listTopics
         const topicFilter = 'testString';
         const perPage = 38;
         const page = 38;
-        const params = {
-          topicFilter: topicFilter,
-          perPage: perPage,
-          page: page,
+        const listTopicsParams = {
+          topicFilter,
+          perPage,
+          page,
         };
 
-        const listTopicsResult = adminrestService.listTopics(params);
+        const listTopicsResult = adminrestService.listTopics(listTopicsParams);
 
         // all methods should return a Promise
         expectToBePromise(listTopicsResult);
@@ -185,29 +273,44 @@ describe('AdminrestV1', () => {
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
-        const options = getOptions(createRequestMock);
+        const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(options, '/admin/topics', 'GET');
+        checkUrlAndMethod(mockRequestOptions, '/admin/topics', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(options.qs['topic_filter']).toEqual(topicFilter);
-        expect(options.qs['per_page']).toEqual(perPage);
-        expect(options.qs['page']).toEqual(page);
+        expect(mockRequestOptions.qs.topic_filter).toEqual(topicFilter);
+        expect(mockRequestOptions.qs.per_page).toEqual(perPage);
+        expect(mockRequestOptions.qs.page).toEqual(page);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listTopicsTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __listTopicsTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __listTopicsTest();
       });
 
       test('should prioritize user-given headers', () => {
         // parameters
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const params = {
+        const listTopicsParams = {
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
           },
         };
 
-        adminrestService.listTopics(params);
+        adminrestService.listTopics(listTopicsParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
 
@@ -218,16 +321,17 @@ describe('AdminrestV1', () => {
       });
     });
   });
+
   describe('getTopic', () => {
     describe('positive tests', () => {
-      test('should pass the right params to createRequest', () => {
+      function __getTopicTest() {
         // Construct the params object for operation getTopic
         const topicName = 'testString';
-        const params = {
-          topicName: topicName,
+        const getTopicParams = {
+          topicName,
         };
 
-        const getTopicResult = adminrestService.getTopic(params);
+        const getTopicResult = adminrestService.getTopic(getTopicParams);
 
         // all methods should return a Promise
         expectToBePromise(getTopicResult);
@@ -235,13 +339,28 @@ describe('AdminrestV1', () => {
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
-        const options = getOptions(createRequestMock);
+        const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(options, '/admin/topics/{topic_name}', 'GET');
+        checkUrlAndMethod(mockRequestOptions, '/admin/topics/{topic_name}', 'GET');
         const expectedAccept = 'application/json';
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(options.path['topic_name']).toEqual(topicName);
+        expect(mockRequestOptions.path.topic_name).toEqual(topicName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getTopicTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getTopicTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getTopicTest();
       });
 
       test('should prioritize user-given headers', () => {
@@ -249,7 +368,7 @@ describe('AdminrestV1', () => {
         const topicName = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const params = {
+        const getTopicParams = {
           topicName,
           headers: {
             Accept: userAccept,
@@ -257,41 +376,46 @@ describe('AdminrestV1', () => {
           },
         };
 
-        adminrestService.getTopic(params);
+        adminrestService.getTopic(getTopicParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
 
     describe('negative tests', () => {
       test('should enforce required parameters', async () => {
+        let err;
         try {
           await adminrestService.getTopic({});
         } catch (e) {
-          expect(e.message).toMatch(/Missing required parameters/);
+          err = e;
         }
+
+        expect(err.message).toMatch(/Missing required parameters/);
       });
 
-      test('should reject promise when required params are not given', done => {
-        const getTopicPromise = adminrestService.getTopic();
-        expectToBePromise(getTopicPromise);
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.getTopic();
+        } catch (e) {
+          err = e;
+        }
 
-        getTopicPromise.catch(err => {
-          expect(err.message).toMatch(/Missing required parameters/);
-          done();
-        });
+        expect(err.message).toMatch(/Missing required parameters/);
       });
     });
   });
+
   describe('deleteTopic', () => {
     describe('positive tests', () => {
-      test('should pass the right params to createRequest', () => {
+      function __deleteTopicTest() {
         // Construct the params object for operation deleteTopic
         const topicName = 'testString';
-        const params = {
-          topicName: topicName,
+        const deleteTopicParams = {
+          topicName,
         };
 
-        const deleteTopicResult = adminrestService.deleteTopic(params);
+        const deleteTopicResult = adminrestService.deleteTopic(deleteTopicParams);
 
         // all methods should return a Promise
         expectToBePromise(deleteTopicResult);
@@ -299,13 +423,28 @@ describe('AdminrestV1', () => {
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
-        const options = getOptions(createRequestMock);
+        const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(options, '/admin/topics/{topic_name}', 'DELETE');
-        const expectedAccept = 'application/json';
+        checkUrlAndMethod(mockRequestOptions, '/admin/topics/{topic_name}', 'DELETE');
+        const expectedAccept = undefined;
         const expectedContentType = undefined;
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(options.path['topic_name']).toEqual(topicName);
+        expect(mockRequestOptions.path.topic_name).toEqual(topicName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __deleteTopicTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __deleteTopicTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __deleteTopicTest();
       });
 
       test('should prioritize user-given headers', () => {
@@ -313,7 +452,7 @@ describe('AdminrestV1', () => {
         const topicName = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const params = {
+        const deleteTopicParams = {
           topicName,
           headers: {
             Accept: userAccept,
@@ -321,54 +460,59 @@ describe('AdminrestV1', () => {
           },
         };
 
-        adminrestService.deleteTopic(params);
+        adminrestService.deleteTopic(deleteTopicParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
 
     describe('negative tests', () => {
       test('should enforce required parameters', async () => {
+        let err;
         try {
           await adminrestService.deleteTopic({});
         } catch (e) {
-          expect(e.message).toMatch(/Missing required parameters/);
+          err = e;
         }
+
+        expect(err.message).toMatch(/Missing required parameters/);
       });
 
-      test('should reject promise when required params are not given', done => {
-        const deleteTopicPromise = adminrestService.deleteTopic();
-        expectToBePromise(deleteTopicPromise);
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.deleteTopic();
+        } catch (e) {
+          err = e;
+        }
 
-        deleteTopicPromise.catch(err => {
-          expect(err.message).toMatch(/Missing required parameters/);
-          done();
-        });
+        expect(err.message).toMatch(/Missing required parameters/);
       });
     });
   });
+
   describe('updateTopic', () => {
     describe('positive tests', () => {
       // Request models needed by this operation.
 
-      // ConfigUpdate
-      const configUpdateModel = {
+      // TopicUpdateRequestConfigsItem
+      const topicUpdateRequestConfigsItemModel = {
         name: 'testString',
         value: 'testString',
         reset_to_default: true,
       };
 
-      test('should pass the right params to createRequest', () => {
+      function __updateTopicTest() {
         // Construct the params object for operation updateTopic
         const topicName = 'testString';
         const newTotalPartitionCount = 38;
-        const configs = [configUpdateModel];
-        const params = {
-          topicName: topicName,
-          newTotalPartitionCount: newTotalPartitionCount,
-          configs: configs,
+        const configs = [topicUpdateRequestConfigsItemModel];
+        const updateTopicParams = {
+          topicName,
+          newTotalPartitionCount,
+          configs,
         };
 
-        const updateTopicResult = adminrestService.updateTopic(params);
+        const updateTopicResult = adminrestService.updateTopic(updateTopicParams);
 
         // all methods should return a Promise
         expectToBePromise(updateTopicResult);
@@ -376,15 +520,30 @@ describe('AdminrestV1', () => {
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
-        const options = getOptions(createRequestMock);
+        const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(options, '/admin/topics/{topic_name}', 'PATCH');
-        const expectedAccept = 'application/json';
+        checkUrlAndMethod(mockRequestOptions, '/admin/topics/{topic_name}', 'PATCH');
+        const expectedAccept = undefined;
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(options.body['new_total_partition_count']).toEqual(newTotalPartitionCount);
-        expect(options.body['configs']).toEqual(configs);
-        expect(options.path['topic_name']).toEqual(topicName);
+        expect(mockRequestOptions.body.new_total_partition_count).toEqual(newTotalPartitionCount);
+        expect(mockRequestOptions.body.configs).toEqual(configs);
+        expect(mockRequestOptions.path.topic_name).toEqual(topicName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __updateTopicTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __updateTopicTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __updateTopicTest();
       });
 
       test('should prioritize user-given headers', () => {
@@ -392,7 +551,7 @@ describe('AdminrestV1', () => {
         const topicName = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const params = {
+        const updateTopicParams = {
           topicName,
           headers: {
             Accept: userAccept,
@@ -400,168 +559,128 @@ describe('AdminrestV1', () => {
           },
         };
 
-        adminrestService.updateTopic(params);
+        adminrestService.updateTopic(updateTopicParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
       });
     });
 
     describe('negative tests', () => {
       test('should enforce required parameters', async () => {
+        let err;
         try {
           await adminrestService.updateTopic({});
         } catch (e) {
-          expect(e.message).toMatch(/Missing required parameters/);
+          err = e;
         }
+
+        expect(err.message).toMatch(/Missing required parameters/);
       });
 
-      test('should reject promise when required params are not given', done => {
-        const updateTopicPromise = adminrestService.updateTopic();
-        expectToBePromise(updateTopicPromise);
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.updateTopic();
+        } catch (e) {
+          err = e;
+        }
 
-        updateTopicPromise.catch(err => {
-          expect(err.message).toMatch(/Missing required parameters/);
-          done();
-        });
+        expect(err.message).toMatch(/Missing required parameters/);
       });
     });
   });
-  describe('getMirroringTopicSelection', () => {
-    describe('positive tests', () => {
-      test('should pass the right params to createRequest', () => {
-        // Construct the params object for operation getMirroringTopicSelection
-        const params = {};
 
-        const getMirroringTopicSelectionResult = adminrestService.getMirroringTopicSelection(
-          params
-        );
+  describe('deleteTopicRecords', () => {
+    describe('positive tests', () => {
+      // Request models needed by this operation.
+
+      // RecordDeleteRequestRecordsToDeleteItem
+      const recordDeleteRequestRecordsToDeleteItemModel = {
+        partition: 38,
+        before_offset: 26,
+      };
+
+      function __deleteTopicRecordsTest() {
+        // Construct the params object for operation deleteTopicRecords
+        const topicName = 'testString';
+        const recordsToDelete = [recordDeleteRequestRecordsToDeleteItemModel];
+        const deleteTopicRecordsParams = {
+          topicName,
+          recordsToDelete,
+        };
+
+        const deleteTopicRecordsResult =
+          adminrestService.deleteTopicRecords(deleteTopicRecordsParams);
 
         // all methods should return a Promise
-        expectToBePromise(getMirroringTopicSelectionResult);
+        expectToBePromise(deleteTopicRecordsResult);
 
         // assert that create request was called
         expect(createRequestMock).toHaveBeenCalledTimes(1);
 
-        const options = getOptions(createRequestMock);
+        const mockRequestOptions = getOptions(createRequestMock);
 
-        checkUrlAndMethod(options, '/admin/mirroring/topic-selection', 'GET');
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-      });
-
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const params = {
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
-
-        adminrestService.getMirroringTopicSelection(params);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-
-      test('should not have any problems when no parameters are passed in', () => {
-        // invoke the method with no parameters
-        adminrestService.getMirroringTopicSelection({});
-        checkForSuccessfulExecution(createRequestMock);
-      });
-    });
-  });
-  describe('replaceMirroringTopicSelection', () => {
-    describe('positive tests', () => {
-      test('should pass the right params to createRequest', () => {
-        // Construct the params object for operation replaceMirroringTopicSelection
-        const includes = ['testString'];
-        const params = {
-          includes: includes,
-        };
-
-        const replaceMirroringTopicSelectionResult = adminrestService.replaceMirroringTopicSelection(
-          params
-        );
-
-        // all methods should return a Promise
-        expectToBePromise(replaceMirroringTopicSelectionResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const options = getOptions(createRequestMock);
-
-        checkUrlAndMethod(options, '/admin/mirroring/topic-selection', 'POST');
-        const expectedAccept = 'application/json';
+        checkUrlAndMethod(mockRequestOptions, '/admin/topics/{topic_name}/records', 'DELETE');
+        const expectedAccept = undefined;
         const expectedContentType = 'application/json';
         checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
-        expect(options.body['includes']).toEqual(includes);
+        expect(mockRequestOptions.body.records_to_delete).toEqual(recordsToDelete);
+        expect(mockRequestOptions.path.topic_name).toEqual(topicName);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __deleteTopicRecordsTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __deleteTopicRecordsTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __deleteTopicRecordsTest();
       });
 
       test('should prioritize user-given headers', () => {
         // parameters
+        const topicName = 'testString';
         const userAccept = 'fake/accept';
         const userContentType = 'fake/contentType';
-        const params = {
+        const deleteTopicRecordsParams = {
+          topicName,
           headers: {
             Accept: userAccept,
             'Content-Type': userContentType,
           },
         };
 
-        adminrestService.replaceMirroringTopicSelection(params);
+        adminrestService.deleteTopicRecords(deleteTopicRecordsParams);
         checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-
-      test('should not have any problems when no parameters are passed in', () => {
-        // invoke the method with no parameters
-        adminrestService.replaceMirroringTopicSelection({});
-        checkForSuccessfulExecution(createRequestMock);
       });
     });
-  });
-  describe('getMirroringActiveTopics', () => {
-    describe('positive tests', () => {
-      test('should pass the right params to createRequest', () => {
-        // Construct the params object for operation getMirroringActiveTopics
-        const params = {};
 
-        const getMirroringActiveTopicsResult = adminrestService.getMirroringActiveTopics(params);
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.deleteTopicRecords({});
+        } catch (e) {
+          err = e;
+        }
 
-        // all methods should return a Promise
-        expectToBePromise(getMirroringActiveTopicsResult);
-
-        // assert that create request was called
-        expect(createRequestMock).toHaveBeenCalledTimes(1);
-
-        const options = getOptions(createRequestMock);
-
-        checkUrlAndMethod(options, '/admin/mirroring/active-topics', 'GET');
-        const expectedAccept = 'application/json';
-        const expectedContentType = undefined;
-        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(err.message).toMatch(/Missing required parameters/);
       });
 
-      test('should prioritize user-given headers', () => {
-        // parameters
-        const userAccept = 'fake/accept';
-        const userContentType = 'fake/contentType';
-        const params = {
-          headers: {
-            Accept: userAccept,
-            'Content-Type': userContentType,
-          },
-        };
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.deleteTopicRecords();
+        } catch (e) {
+          err = e;
+        }
 
-        adminrestService.getMirroringActiveTopics(params);
-        checkMediaHeaders(createRequestMock, userAccept, userContentType);
-      });
-
-      test('should not have any problems when no parameters are passed in', () => {
-        // invoke the method with no parameters
-        adminrestService.getMirroringActiveTopics({});
-        checkForSuccessfulExecution(createRequestMock);
+        expect(err.message).toMatch(/Missing required parameters/);
       });
     });
   });
@@ -969,6 +1088,826 @@ describe('AdminrestV1', () => {
       test('should not have any problems when no parameters are passed in', () => {
         // invoke the method with no parameters
         adminrestService.listQuotas({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
+  describe('listBrokers', () => {
+    describe('positive tests', () => {
+      function __listBrokersTest() {
+        // Construct the params object for operation listBrokers
+        const listBrokersParams = {};
+
+        const listBrokersResult = adminrestService.listBrokers(listBrokersParams);
+
+        // all methods should return a Promise
+        expectToBePromise(listBrokersResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/brokers', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listBrokersTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __listBrokersTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __listBrokersTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listBrokersParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.listBrokers(listBrokersParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.listBrokers({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
+  describe('getBroker', () => {
+    describe('positive tests', () => {
+      function __getBrokerTest() {
+        // Construct the params object for operation getBroker
+        const brokerId = 38;
+        const getBrokerParams = {
+          brokerId,
+        };
+
+        const getBrokerResult = adminrestService.getBroker(getBrokerParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getBrokerResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/brokers/{broker_id}', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.broker_id).toEqual(brokerId);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getBrokerTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getBrokerTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getBrokerTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const brokerId = 38;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getBrokerParams = {
+          brokerId,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getBroker(getBrokerParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.getBroker({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.getBroker();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('getBrokerConfig', () => {
+    describe('positive tests', () => {
+      function __getBrokerConfigTest() {
+        // Construct the params object for operation getBrokerConfig
+        const brokerId = 38;
+        const configFilter = 'testString';
+        const verbose = true;
+        const getBrokerConfigParams = {
+          brokerId,
+          configFilter,
+          verbose,
+        };
+
+        const getBrokerConfigResult = adminrestService.getBrokerConfig(getBrokerConfigParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getBrokerConfigResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/brokers/{broker_id}/configs', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.qs.config_filter).toEqual(configFilter);
+        expect(mockRequestOptions.qs.verbose).toEqual(verbose);
+        expect(mockRequestOptions.path.broker_id).toEqual(brokerId);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getBrokerConfigTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getBrokerConfigTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getBrokerConfigTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const brokerId = 38;
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getBrokerConfigParams = {
+          brokerId,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getBrokerConfig(getBrokerConfigParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.getBrokerConfig({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.getBrokerConfig();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('getCluster', () => {
+    describe('positive tests', () => {
+      function __getClusterTest() {
+        // Construct the params object for operation getCluster
+        const getClusterParams = {};
+
+        const getClusterResult = adminrestService.getCluster(getClusterParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getClusterResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/cluster', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getClusterTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getClusterTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getClusterTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getClusterParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getCluster(getClusterParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.getCluster({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
+  describe('listConsumerGroups', () => {
+    describe('positive tests', () => {
+      function __listConsumerGroupsTest() {
+        // Construct the params object for operation listConsumerGroups
+        const groupFilter = 'testString';
+        const perPage = 38;
+        const page = 38;
+        const listConsumerGroupsParams = {
+          groupFilter,
+          perPage,
+          page,
+        };
+
+        const listConsumerGroupsResult =
+          adminrestService.listConsumerGroups(listConsumerGroupsParams);
+
+        // all methods should return a Promise
+        expectToBePromise(listConsumerGroupsResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/consumergroups', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.qs.group_filter).toEqual(groupFilter);
+        expect(mockRequestOptions.qs.per_page).toEqual(perPage);
+        expect(mockRequestOptions.qs.page).toEqual(page);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __listConsumerGroupsTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __listConsumerGroupsTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __listConsumerGroupsTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const listConsumerGroupsParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.listConsumerGroups(listConsumerGroupsParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.listConsumerGroups({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
+  describe('getConsumerGroup', () => {
+    describe('positive tests', () => {
+      function __getConsumerGroupTest() {
+        // Construct the params object for operation getConsumerGroup
+        const groupId = 'testString';
+        const getConsumerGroupParams = {
+          groupId,
+        };
+
+        const getConsumerGroupResult = adminrestService.getConsumerGroup(getConsumerGroupParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getConsumerGroupResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/consumergroups/{group_id}', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.group_id).toEqual(groupId);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getConsumerGroupTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getConsumerGroupTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getConsumerGroupTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const groupId = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getConsumerGroupParams = {
+          groupId,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getConsumerGroup(getConsumerGroupParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.getConsumerGroup({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.getConsumerGroup();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('deleteConsumerGroup', () => {
+    describe('positive tests', () => {
+      function __deleteConsumerGroupTest() {
+        // Construct the params object for operation deleteConsumerGroup
+        const groupId = 'testString';
+        const deleteConsumerGroupParams = {
+          groupId,
+        };
+
+        const deleteConsumerGroupResult =
+          adminrestService.deleteConsumerGroup(deleteConsumerGroupParams);
+
+        // all methods should return a Promise
+        expectToBePromise(deleteConsumerGroupResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/consumergroups/{group_id}', 'DELETE');
+        const expectedAccept = undefined;
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.path.group_id).toEqual(groupId);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __deleteConsumerGroupTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __deleteConsumerGroupTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __deleteConsumerGroupTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const groupId = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const deleteConsumerGroupParams = {
+          groupId,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.deleteConsumerGroup(deleteConsumerGroupParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.deleteConsumerGroup({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.deleteConsumerGroup();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('updateConsumerGroup', () => {
+    describe('positive tests', () => {
+      function __updateConsumerGroupTest() {
+        // Construct the params object for operation updateConsumerGroup
+        const groupId = 'testString';
+        const topic = 'testString';
+        const mode = 'testString';
+        const value = 'testString';
+        const execute = true;
+        const updateConsumerGroupParams = {
+          groupId,
+          topic,
+          mode,
+          value,
+          execute,
+        };
+
+        const updateConsumerGroupResult =
+          adminrestService.updateConsumerGroup(updateConsumerGroupParams);
+
+        // all methods should return a Promise
+        expectToBePromise(updateConsumerGroupResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/consumergroups/{group_id}', 'PATCH');
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.topic).toEqual(topic);
+        expect(mockRequestOptions.body.mode).toEqual(mode);
+        expect(mockRequestOptions.body.value).toEqual(value);
+        expect(mockRequestOptions.body.execute).toEqual(execute);
+        expect(mockRequestOptions.path.group_id).toEqual(groupId);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __updateConsumerGroupTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __updateConsumerGroupTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __updateConsumerGroupTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const groupId = 'testString';
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const updateConsumerGroupParams = {
+          groupId,
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.updateConsumerGroup(updateConsumerGroupParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+    });
+
+    describe('negative tests', () => {
+      test('should enforce required parameters', async () => {
+        let err;
+        try {
+          await adminrestService.updateConsumerGroup({});
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+
+      test('should reject promise when required params are not given', async () => {
+        let err;
+        try {
+          await adminrestService.updateConsumerGroup();
+        } catch (e) {
+          err = e;
+        }
+
+        expect(err.message).toMatch(/Missing required parameters/);
+      });
+    });
+  });
+
+  describe('getMirroringTopicSelection', () => {
+    describe('positive tests', () => {
+      function __getMirroringTopicSelectionTest() {
+        // Construct the params object for operation getMirroringTopicSelection
+        const getMirroringTopicSelectionParams = {};
+
+        const getMirroringTopicSelectionResult = adminrestService.getMirroringTopicSelection(
+          getMirroringTopicSelectionParams
+        );
+
+        // all methods should return a Promise
+        expectToBePromise(getMirroringTopicSelectionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/mirroring/topic-selection', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getMirroringTopicSelectionTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getMirroringTopicSelectionTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getMirroringTopicSelectionTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getMirroringTopicSelectionParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getMirroringTopicSelection(getMirroringTopicSelectionParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.getMirroringTopicSelection({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
+  describe('replaceMirroringTopicSelection', () => {
+    describe('positive tests', () => {
+      function __replaceMirroringTopicSelectionTest() {
+        // Construct the params object for operation replaceMirroringTopicSelection
+        const includes = ['testString'];
+        const replaceMirroringTopicSelectionParams = {
+          includes,
+        };
+
+        const replaceMirroringTopicSelectionResult =
+          adminrestService.replaceMirroringTopicSelection(replaceMirroringTopicSelectionParams);
+
+        // all methods should return a Promise
+        expectToBePromise(replaceMirroringTopicSelectionResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/mirroring/topic-selection', 'POST');
+        const expectedAccept = 'application/json';
+        const expectedContentType = 'application/json';
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+        expect(mockRequestOptions.body.includes).toEqual(includes);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __replaceMirroringTopicSelectionTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __replaceMirroringTopicSelectionTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __replaceMirroringTopicSelectionTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const replaceMirroringTopicSelectionParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.replaceMirroringTopicSelection(replaceMirroringTopicSelectionParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.replaceMirroringTopicSelection({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
+  describe('getMirroringActiveTopics', () => {
+    describe('positive tests', () => {
+      function __getMirroringActiveTopicsTest() {
+        // Construct the params object for operation getMirroringActiveTopics
+        const getMirroringActiveTopicsParams = {};
+
+        const getMirroringActiveTopicsResult = adminrestService.getMirroringActiveTopics(
+          getMirroringActiveTopicsParams
+        );
+
+        // all methods should return a Promise
+        expectToBePromise(getMirroringActiveTopicsResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/mirroring/active-topics', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getMirroringActiveTopicsTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getMirroringActiveTopicsTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getMirroringActiveTopicsTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getMirroringActiveTopicsParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getMirroringActiveTopics(getMirroringActiveTopicsParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.getMirroringActiveTopics({});
         checkForSuccessfulExecution(createRequestMock);
       });
     });
