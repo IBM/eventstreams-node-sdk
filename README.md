@@ -3,7 +3,7 @@
 <!--
 [![npm-version](https://img.shields.io/npm/v/IBM/eventstreams-node-sdk.svg)](https://www.npmjs.com/package/adminrestv1)
 -->
-# IBM Cloud Eventstreams Node SDK Version 1.1.0
+# IBM Cloud Event Streams Node SDK Version 1.3.0
 
 ## Introduction
 
@@ -13,7 +13,7 @@ It is optimized for event ingestion into IBM Cloud and event stream distribution
 Event Streams provides a REST API to help connect your existing systems to your Event Streams Kafka cluster. 
 Using the API, you can integrate Event Streams with any system that supports RESTful APIs.
 
-Documentation [IBM Cloud Eventstreams Service APIs](https://cloud.ibm.com/apidocs/event-streams).
+Documentation [IBM Cloud Event Streams Service APIs](https://cloud.ibm.com/apidocs/event-streams).
 
 ## Table of Contents
 
@@ -45,20 +45,21 @@ Documentation [IBM Cloud Eventstreams Service APIs](https://cloud.ibm.com/apidoc
 <!-- --------------------------------------------------------------- -->
 ## Overview
 
-The IBM Cloud Eventstreams SDK Node.js SDK allows developers to programmatically interact with the following
+The IBM Cloud Event Streams SDK Node.js SDK allows developers to programmatically interact with the following
 IBM Cloud services:
 
 Service Name | Import Path
 --- | ---
-[Admin Rest](https://cloud.ibm.com/apidocs/event-streams) | AdminRest
+[Admin Rest](https://cloud.ibm.com/apidocs/event-streams/adminrest) | pkg/adminrestv1
+[Schema Registry](https://cloud.ibm.com/apidocs/event-streams/schemaregistry) | pkg/schemaregistryv1
 
 ## Prerequisites
 
 * An [IBM Cloud](https://cloud.ibm.com/registration) account.
 * The [IBM Cloud CLI.](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 * An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
-* A IBM Cloud Eventstreams Instance Create one [here](https://cloud.ibm.com/registration?target=/catalog/services/event-streams)
-* **Node.js >=10**: This SDK is tested with Node.js versions 10 and up. It may work on previous versions but this is not officially supported.
+* An IBM Cloud Event Streams Instance Create one [here](https://cloud.ibm.com/registration?target=/catalog/services/event-streams)
+* **Node.js >=14**: This SDK is tested with Node.js versions 14 and up. It may work on previous versions but this is not officially supported.
 
 
 
@@ -139,7 +140,7 @@ $ibmcloud resource service-key "${service_instance_key_name}" --output json > jq
 ## Environment Setup
 In the examples you must set and export environment variables as follows:
 - Either the `API_KEY` or `BEARER_TOKEN` to use for authentication.
-- `KAFKA_ADMIN_URL` to point to your Eventstreams admin endpoint.
+- `KAFKA_ADMIN_URL` to point to your Event Streams administration endpoint.
 
 In addition, the `Content-type` header has to be set to `application/json`.
 
@@ -199,16 +200,19 @@ The following sections explain how the REST API works with examples.
 // Code Setup
 const HTTP = require('http');
 const util = require('util');
-const KAFKA_ADMIN_URL = process.env.KAFKA_ADMIN_URL;
-const API_KEY = process.env.API_KEY;
-const BEARER_TOKEN = process.env.BEARER_TOKEN;
+
+const { KAFKA_ADMIN_URL } = process.env;
+const { API_KEY } = process.env;
+const { BEARER_TOKEN } = process.env;
 const NewAdminrestV1 = require('../dist/adminrest/v1');
 const { BasicAuthenticator } = require('../dist/auth');
 const { BearerTokenAuthenticator } = require('../dist/auth');
 const { NoAuthAuthenticator } = require('../dist/auth');
+
 const topicName = 'test-topic';
 let authenticator = new NoAuthAuthenticator({});
 /* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 
 // Code Setup End
 ```
@@ -317,28 +321,28 @@ If the request to create a Kafka topic succeeds then HTTP status code 202 (Accep
 #### Example
 
 ```javascript
-function createTopic(adminREST, topicName) {
+function createTopic(adminrest, topicname) {
   console.log('Create Topic');
   // Construct the params object for operation createTopic
-  const name = topicName;
+  const name = topicname;
   const partitions = 3;
   const params = {
-    name: name,
-    partitions: partitions,
+    name,
+    partitions,
   };
 
   // Call the create topic function on the service.
-  const createTopicResult = adminREST.createTopic(params);
+  const createTopicResult = adminrest.createTopic(params);
 
   // Look at the results of the promise.
   return createTopicResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-        console.log('\tname: ' + topicName);
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'Accepted') {
+        console.log(`\tname: ${topicName}`);
       }
     },
-    err => {
-      console.log('\tError creating topics ' + err);
+    (err) => {
+      console.log(`\tError creating topics ${err}`);
     }
   );
 } 
@@ -369,26 +373,26 @@ of time after the completion of a REST request to delete the topic.
 #### Example
 
 ```javascript
-function deleteTopic(adminREST, topicName) {
+function deleteTopic(adminrest, topicname) {
   console.log('Delete Topic');
 
   // Construct the params object for operation deleteTopic
   const params = {
-    topicName: topicName,
+    topicName: topicname,
   };
 
   // Call the delete topic function on the service.
-  const deleteTopicResult = adminREST.deleteTopic(params);
+  const deleteTopicResult = adminrest.deleteTopic(params);
 
   // Look at the results of the promise.
   return deleteTopicResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-        console.log('\tname: ' + topicName);
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'Accepted') {
+        console.log(`\tname: ${topicName}`);
       }
     },
-    err => {
-      console.log('\tError deleting topic: ' + topicName + 'error: ' + err);
+    (err) => {
+      console.log(`\tError deleting topic: ${topicName}error: ${err}`);
     }
   );
 } 
@@ -431,7 +435,7 @@ following properties:
 #### Example
 
 ```javascript
-function listTopics(adminREST) {
+function listTopics(adminrest) {
   console.log('List Topics');
 
   // Construct the params object for operation listTopics.
@@ -443,19 +447,19 @@ function listTopics(adminREST) {
 
   // Service operations can now be invoked using the 'adminREST' variable.
   // Call listTopics on the service.
-  const listTopicsResult = adminREST.listTopics(params);
+  const listTopicsResult = adminrest.listTopics(params);
 
   // Look at the results of the promise.
   return listTopicsResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-        for (const val of result.result) {
-          console.log('\tname: ' + val.name);
-        }
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'OK') {
+        result.result.forEach((val) => {
+          console.log(`\tname: ${val.name}`);
+        });
       }
     },
-    err => {
-      console.log('Error listing topics ' + err);
+    (err) => {
+      console.log(`Error listing topics ${err}`);
     }
   );
 } 
@@ -502,26 +506,26 @@ Expected status codes
 #### Example
 
 ```javascript
-function topicDetails(adminREST, topicName) {
+function topicDetails(adminrest, topicname) {
   console.log('Topic Details');
 
   // Construct the params object for operation getTopic
   const params = {
-    topicName: topicName,
+    topicName: topicname,
   };
 
   // Call the get topic function on the service.
-  const getTopicResult = adminREST.getTopic(params);
+  const getTopicResult = adminrest.getTopic(params);
 
   // Look at the results of the promise.
   return getTopicResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'OK') {
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'OK') {
         console.log(util.inspect(result.result, false, null, true));
       }
     },
-    err => {
-      console.log('\tError getting topic details: ' + topicName + 'error: ' + err);
+    (err) => {
+      console.log(`\tError getting topic details: ${topicName}error: ${err}`);
     }
   );
 } 
@@ -555,27 +559,27 @@ Expected status codes
 #### Example
 
 ```javascript
-function updateTopic(adminREST, topicName) {
+function updateTopic(adminrest, topicname) {
   console.log('Update Topic Details');
   // Construct the params object for operation updateTopic
   const newTotalPartitionCount = 6;
   const params = {
-    topicName: topicName,
-    newTotalPartitionCount: newTotalPartitionCount,
+    topicName: topicname,
+    newTotalPartitionCount,
   };
 
   // Call the update topic function on the service.
-  const updateTopicResult = adminREST.updateTopic(params);
+  const updateTopicResult = adminrest.updateTopic(params);
 
   // Look at the results of the promise.
   return updateTopicResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-        console.log('\tname: ' + topicName);
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'Accepted') {
+        console.log(`\tname: ${topicName}`);
       }
     },
-    err => {
-      console.log('\tError updating topic details: ' + topicName + 'error: ' + err);
+    (err) => {
+      console.log(`\tError updating topic details: ${topicName}error: ${err}`);
     }
   );
 } 
@@ -605,7 +609,7 @@ Expected status codes
 #### Example
 
 ```javascript
-function getMirroringTopicSelection(adminREST) {
+function getMirroringTopicSelection(adminrest) {
   console.log('List Mirroring Topic Selection');
   const params = {};
 
@@ -614,15 +618,15 @@ function getMirroringTopicSelection(adminREST) {
 
   // Look at the results of the promise.
   return getMirroringTopicSelectionResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-        for (const val of result.result) {
-          console.log('\tname: ' + val.name);
-        }
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'OK') {
+        result.result.forEach((val) => {
+          console.log(`\tname: ${val.name}`);
+        });
       }
     },
-    err => {
-      console.log('Error listing mirroring topics selection ' + err);
+    (err) => {
+      console.log(`Error listing mirroring topics selection ${err}`);
     }
   );
 } 
@@ -656,26 +660,26 @@ Expected status codes
 #### Example
 
 ```javascript
-function replaceMirroringTopicSelection(adminREST, topicName) {
+function replaceMirroringTopicSelection(adminrest, topicname) {
   console.log('Replace Mirroring Topics');
   // Construct the params object for operation replaceMirroringTopicSelection
-  const includes = topicName;
+  const includes = topicname;
   const params = {
-    includes: includes,
+    includes,
   };
 
   // Call the replace mirroring topic selection on the service.
-  const replaceMirroringTopicSelectionResult = adminREST.replaceMirroringTopicSelection(params);
+  const replaceMirroringTopicSelectionResult = adminrest.replaceMirroringTopicSelection(params);
 
   // Look at the results of the promise.
   return replaceMirroringTopicSelectionResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-        console.log('\tmirroring topic selection updated ' + topicName);
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'OK') {
+        console.log(`\tmirroring topic selection updated ${topicname}`);
       }
     },
-    err => {
-      console.log('Error replacing mirroring topics selection ' + err);
+    (err) => {
+      console.log(`Error replacing mirroring topics selection ${err}`);
     }
   );
 } 
@@ -705,32 +709,34 @@ Expected status codes
 #### Example
 
 ```javascript
-function getListMirroringActiveTopics(adminREST) {
+function getListMirroringActiveTopics(adminrest) {
   console.log('List Active Mirroring Topic Selection\n');
   // Construct the params object for operation getMirroringActiveTopics
   const params = {};
 
   // Call the get mirroring active topic function on the service.
-  const getMirroringActiveTopicsResult = adminREST.getMirroringActiveTopics(params);
+  const getMirroringActiveTopicsResult = adminrest.getMirroringActiveTopics(params);
 
   // Look at the results of the promise.
   return getMirroringActiveTopicsResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-        for (const val of result.result) {
-          console.log('\tname: ' + val.name);
-        }
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'OK') {
+        result.result.forEach((val) => {
+          console.log(`\tname: ${val.name}`);
+        });
       }
     },
-    err => {
-      console.log('Error listing active mirroring topics selection ' + err);
+    (err) => {
+      console.log(`Error listing active mirroring topics selection ${err}`);
     }
   );
 } 
 ```
+
+
 ### Creating a Kafka quota
 ---
-To create a Kafka quota the admin REST SDK issues a POST request to the `/admin/quotas/ENTITYNAME` path (where `ENTITYNAME` is the name of the entity that you want to create. The entity name of the quota can be `default` or an IAM Service ID that starts with an `iam-ServiceId` prefix).
+To create a Kafka quota the admin REST SDK issues a POST request to the /admin/quotas/ENTITYNAME path (where `ENTITYNAME` is the name of the entity that you want to create. The entity name of the quota can be `default` or an IAM Service ID that starts with an `iam-ServiceId` prefix).
 The body of the request contains a JSON document, for example:
 ```json
 {
@@ -750,38 +756,34 @@ Expected HTTP status codes:
 
 If the request to create a Kafka quota succeeds then HTTP status code 201 (Created) is returned. If the operation fails then a HTTP status code of 422 (Un-processable Entity) is returned, and a JSON object containing additional information about the failure is returned as the body of the response.
 
-
-
-
 #### Example
 
 ```javascript
-function createQuota(adminREST, entityName) {
+function createQuota(adminrest, entityName) {
   console.log('Create Quota');
   // Construct the params object for operation createQuota
   const params = {
-    entityName: entityName,
+    entityName,
     producerByteRate: 1024,
-    consumerByteRate: 1024
+    consumerByteRate: 1024,
   };
 
   // Call the create quota function on the service.
-  const createQuotaResult = adminREST.createQuota(params);
+  const createQuotaResult = adminrest.createQuota(params);
 
   // Look at the results of the promise.
   return createQuotaResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'Created') {
-        console.log('\tentity_name: ' + entityName);
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'Created') {
+        console.log(`\tentity_name: ${entityName}`);
       }
     },
-    err => {
-      console.log('\tError creating quota ' + err);
+    (err) => {
+      console.log(`\tError creating quota ${err}`);
     }
   );
-}
+} 
 ```
-
 
 ### Deleting a Kafka quota
 ---
@@ -793,39 +795,40 @@ Expected return codes:
 - 403: Not authorized to delete quota.
 - 404: Entity Quota does not exist.
 - 422: Semantically invalid request.
-  
+
 A 202 (Accepted) status code is returned if the REST API accepts the delete
 request or status code 422 (Un-processable Entity) if the delete request is
 rejected. If a delete request is rejected then the body of the HTTP response
 will contain a JSON object which provides additional information about why
 the request was rejected.
 
+
 #### Example
 
 ```javascript
-function deleteQuota(adminREST, entityName) {
+function deleteQuota(adminrest, entityName) {
   console.log('Delete Quota');
 
   // Construct the params object for operation deleteTopic
   const params = {
-    entityName: entityName,
+    entityName,
   };
 
   // Call the delete quota function on the service.
-  const deleteQuotaResult = adminREST.deleteQuota(params);
+  const deleteQuotaResult = adminrest.deleteQuota(params);
 
   // Look at the results of the promise.
   return deleteQuotaResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-        console.log('\tentity_name: ' + entityName);
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'Accepted') {
+        console.log(`\tentity_name: ${entityName}`);
       }
     },
-    err => {
-      console.log('\tError deleting quota: ' + err);
+    (err) => {
+      console.log(`\tError deleting quota: ${err}`);
     }
   );
-}
+} 
 ```
 
 ### Listing Kafka quotas
@@ -870,41 +873,41 @@ following properties:
 | producer_byte_rate| The producer byte rate quota value.            |
 | consumer_byte_rate| The consumer byte rate quota value.            |
 
+
 #### Example
 
 ```javascript
-function listQuotas(adminREST) {
+function listQuotas(adminrest) {
   console.log('List Quotas');
 
   // Construct the params object for operation listQuotas.
-  const params = {
-  };
+  const params = {};
 
   // Service operations can now be invoked using the 'adminREST' variable.
   // Call listQuotas on the service.
-  const llistQuotasResult = adminREST.listQuotas(params);
+  const llistQuotasResult = adminrest.listQuotas(params);
 
   // Look at the results of the promise.
   return llistQuotasResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-        for (const val of result.result.data) {
-          var quotaDetail = "\tentity_name: " + val.entity_name;
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'OK') {
+        result.result.forEach((val) => {
+          let quotaDetail = `\tentity_name: ${val.entity_name}`;
           if (val.producer_byte_rate) {
-            quotaDetail += ", producer_byte_rate: " + val.producer_byte_rate;
+            quotaDetail += `, producer_byte_rate: ${val.producer_byte_rate}`;
           }
           if (val.consumer_byte_rate) {
-            quotaDetail += ", consumer_byte_rate: " + val.consumer_byte_rate;
+            quotaDetail += `, consumer_byte_rate: ${val.consumer_byte_rate}`;
           }
           console.log(quotaDetail);
-        }
+        });
       }
     },
-    err => {
-      console.log('Error listing quotas ' + err);
+    (err) => {
+      console.log(`Error listing quotas ${err}`);
     }
   );
-}
+} 
 ```
 
 ### Getting a Kafka quota
@@ -925,29 +928,29 @@ Expected status codes
 #### Example
 
 ```javascript
-function quotaDetails(adminREST, entityName) {
+function quotaDetails(adminrest, entityName) {
   console.log('Quota Details');
 
   // Construct the params object for operation getQuota
   const params = {
-    entityName: entityName,
+    entityName,
   };
 
   // Call the get quota function on the service.
-  const getQuotaResult = adminREST.getQuota(params);
+  const getQuotaResult = adminrest.getQuota(params);
 
   // Look at the results of the promise.
   return getQuotaResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'OK') {
-        console.log("\t"+util.inspect(result.result, false, null, true));
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'OK') {
+        console.log(`\t${util.inspect(result.result, false, null, true)}`);
       }
     },
-    err => {
-      console.log('\tError getting quota details: ' + err);
+    (err) => {
+      console.log(`\tError getting quota details: ${err}`);
     }
   );
-}
+} 
 ```
 
 ### Updating Kafka quota's information
@@ -968,31 +971,33 @@ Expected status codes
 - 404: Entity quota specified does not exist.
 - 422: Semantically invalid request.
 
+
 #### Example
 
 ```javascript
-function updateQuota(adminREST, entityName) {
+function updateQuota(adminrest, entityName) {
   console.log('Update Quota Details');
   // Construct the params object for operation updateQuota
   const params = {
-    entityName: entityName,
+    entityName,
     producerByteRate: 2048,
-    consumerByteRate: 2048
+    consumerByteRate: 2048,
   };
 
   // Call the update quota function on the service.
-  const updateQuotaResult = adminREST.updateQuota(params);
+  const updateQuotaResult = adminrest.updateQuota(params);
 
   // Look at the results of the promise.
   return updateQuotaResult.then(
-    result => {
-      if (HTTP.STATUS_CODES[result.status] == 'Accepted') {
-        console.log('\tentity_name: ' + entityName);
+    (result) => {
+      if (HTTP.STATUS_CODES[result.status] === 'Accepted') {
+        console.log(`\tentity_name: ${entityName}`);
       }
     },
-    err => {
-      console.log('\tError updating quota details: ' + err);
+    (err) => {
+      console.log(`\tError updating quota details: ${err}`);
     }
   );
-}
+} 
 ```
+
