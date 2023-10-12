@@ -10,5 +10,6 @@ test/resources/auth.js
 # ignore emitted js
 **/*v*.js
 !test/**/*.js
+!examples/**/*.js
 lib/*.js
 scripts/typedoc/
