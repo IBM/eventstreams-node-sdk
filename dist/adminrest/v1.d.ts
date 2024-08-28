@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ declare class AdminrestV1 extends BaseService {
      * @param {UserOptions} [options] - The parameters to send to the service.
      * @param {string} [options.serviceName] - The name of the service to configure
      * @param {Authenticator} [options.authenticator] - The Authenticator object used to authenticate requests to the service
-     * @param {string} [options.serviceUrl] - The URL for the service
+     * @param {string} [options.serviceUrl] - The base URL for the service
      * @returns {AdminrestV1}
      */
     static newInstance(options: UserOptions): AdminrestV1;
@@ -40,7 +40,7 @@ declare class AdminrestV1 extends BaseService {
      * Construct a AdminrestV1 object.
      *
      * @param {Object} options - Options for the service.
-     * @param {string} [options.serviceUrl] - The base url to use when contacting the service. The base url may differ between IBM Cloud regions.
+     * @param {string} [options.serviceUrl] - The base URL for the service
      * @param {OutgoingHttpHeaders} [options.headers] - Default headers that shall be included with every request to the service.
      * @param {Authenticator} options.authenticator - The Authenticator object used to authenticate requests to the service
      * @constructor
@@ -340,6 +340,16 @@ declare class AdminrestV1 extends BaseService {
      * @returns {Promise<AdminrestV1.Response<AdminrestV1.MirroringActiveTopics>>}
      */
     getMirroringActiveTopics(params?: AdminrestV1.GetMirroringActiveTopicsParams): Promise<AdminrestV1.Response<AdminrestV1.MirroringActiveTopics>>;
+    /**
+     * Get the status of the instance.
+     *
+     * Get the status of the instance.
+     *
+     * @param {Object} [params] - The parameters to send to the service.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.InstanceStatus>>}
+     */
+    getStatus(params?: AdminrestV1.GetStatusParams): Promise<AdminrestV1.Response<AdminrestV1.InstanceStatus>>;
 }
 /*************************
  * interfaces
@@ -556,10 +566,16 @@ declare namespace AdminrestV1 {
     interface GetMirroringActiveTopicsParams {
         headers?: OutgoingHttpHeaders;
     }
+    /** Parameters for the `getStatus` operation. */
+    interface GetStatusParams {
+        headers?: OutgoingHttpHeaders;
+    }
     /*************************
      * model interfaces
      ************************/
-    /** BrokerDetailConfigsItem. */
+    /**
+     * BrokerDetailConfigsItem.
+     */
     interface BrokerDetailConfigsItem {
         /** The name of the config property. */
         name?: string;
@@ -568,44 +584,58 @@ declare namespace AdminrestV1 {
         /** When true, the value cannot be displayed and will be returned with a null value. */
         is_sensitive?: boolean;
     }
-    /** The new offset for one partition of one topic after resetting consumer group's offset. */
+    /**
+     * The new offset for one partition of one topic after resetting consumer group's offset.
+     */
     interface GroupResetResultsItem {
         topic?: string;
         partition?: number;
         offset?: number;
     }
-    /** The topic partitions assigned for the consumer group member. */
+    /**
+     * The topic partitions assigned for the consumer group member.
+     */
     interface MemberAssignmentsItem {
         /** The name of the topic. */
         topic?: string;
         /** The ID of the partition. */
         partition?: number;
     }
-    /** RecordDeleteRequestRecordsToDeleteItem. */
+    /**
+     * RecordDeleteRequestRecordsToDeleteItem.
+     */
     interface RecordDeleteRequestRecordsToDeleteItem {
         /** The number of partitions. */
         partition?: number;
         /** The offset number before which records to be deleted. */
         before_offset?: number;
     }
-    /** TopicCreateRequestConfigsItem. */
+    /**
+     * TopicCreateRequestConfigsItem.
+     */
     interface TopicCreateRequestConfigsItem {
         /** The name of the config property. */
         name?: string;
         /** The value for a config property. */
         value?: string;
     }
-    /** TopicDetailReplicaAssignmentsItem. */
+    /**
+     * TopicDetailReplicaAssignmentsItem.
+     */
     interface TopicDetailReplicaAssignmentsItem {
         /** The ID of the partition. */
         id?: number;
         brokers?: TopicDetailReplicaAssignmentsItemBrokers;
     }
-    /** TopicDetailReplicaAssignmentsItemBrokers. */
+    /**
+     * TopicDetailReplicaAssignmentsItemBrokers.
+     */
     interface TopicDetailReplicaAssignmentsItemBrokers {
         replicas?: number[];
     }
-    /** TopicUpdateRequestConfigsItem. */
+    /**
+     * TopicUpdateRequestConfigsItem.
+     */
     interface TopicUpdateRequestConfigsItem {
         /** The name of the config property. */
         name?: string;
@@ -614,7 +644,9 @@ declare namespace AdminrestV1 {
         /** When true, the value of the config property is reset to its default value. */
         reset_to_default?: boolean;
     }
-    /** BrokerDetail. */
+    /**
+     * BrokerDetail.
+     */
     interface BrokerDetail {
         /** The ID of the broker configured in the 'broker.id' broker config property. */
         id?: number;
@@ -632,7 +664,9 @@ declare namespace AdminrestV1 {
         rack?: string;
         configs?: BrokerDetailConfigsItem[];
     }
-    /** BrokerSummary. */
+    /**
+     * BrokerSummary.
+     */
     interface BrokerSummary {
         /** The ID of the broker configured in the 'broker.id' broker config property. */
         id?: number;
@@ -649,7 +683,9 @@ declare namespace AdminrestV1 {
          */
         rack?: string;
     }
-    /** Cluster. */
+    /**
+     * Cluster.
+     */
     interface Cluster {
         /** The ID of the cluster. */
         id?: string;
@@ -657,7 +693,9 @@ declare namespace AdminrestV1 {
         /** List of brokers in the cluster. */
         brokers?: BrokerSummary[];
     }
-    /** EntityQuotaDetail. */
+    /**
+     * EntityQuotaDetail.
+     */
     interface EntityQuotaDetail {
         /** The name of the entity. */
         entity_name: string;
@@ -666,7 +704,9 @@ declare namespace AdminrestV1 {
         /** The consumer byte rate quota value. */
         consumer_byte_rate?: number;
     }
-    /** GroupDetail. */
+    /**
+     * GroupDetail.
+     */
     interface GroupDetail {
         /** The ID of the consumer group. */
         group_id?: string;
@@ -677,7 +717,31 @@ declare namespace AdminrestV1 {
         /** The offsets of the consumer group. */
         offsets?: TopicPartitionOffset[];
     }
-    /** Member. */
+    /**
+     * Information about the status of the instance.
+     */
+    interface InstanceStatus {
+        /** The status of the instance: * `available` - the instance is functioning as expected * `degraded` - the
+         *  instance is in a degraded state, some operations may not complete successfully * `offline` - the instance is
+         *  offline, all operations attempted against the instance will fail * `unknown` - the state of the instance is not
+         *  known at this time.
+         */
+        status?: InstanceStatus.Constants.Status | string;
+    }
+    namespace InstanceStatus {
+        namespace Constants {
+            /** The status of the instance: * `available` - the instance is functioning as expected * `degraded` - the instance is in a degraded state, some operations may not complete successfully * `offline` - the instance is offline, all operations attempted against the instance will fail * `unknown` - the state of the instance is not known at this time. */
+            enum Status {
+                AVAILABLE = "available",
+                DEGRADED = "degraded",
+                OFFLINE = "offline",
+                UNKNOWN = "unknown"
+            }
+        }
+    }
+    /**
+     * Member.
+     */
     interface Member {
         /** The consumer ID of the consumer group member. */
         consumer_id?: string;
@@ -688,26 +752,36 @@ declare namespace AdminrestV1 {
         /** The assignments of the group member. */
         assignments?: MemberAssignmentsItem[];
     }
-    /** Topics that are being actively mirrored. */
+    /**
+     * Topics that are being actively mirrored.
+     */
     interface MirroringActiveTopics {
         active_topics?: string[];
     }
-    /** Mirroring topic selection payload. */
+    /**
+     * Mirroring topic selection payload.
+     */
     interface MirroringTopicSelection {
         includes?: string[];
     }
-    /** QuotaDetail. */
+    /**
+     * QuotaDetail.
+     */
     interface QuotaDetail {
         /** The producer byte rate quota value. */
         producer_byte_rate?: number;
         /** The consumer byte rate quota value. */
         consumer_byte_rate?: number;
     }
-    /** A list of 'quota_detail' is returned. */
+    /**
+     * A list of 'quota_detail' is returned.
+     */
     interface QuotaList {
         data?: EntityQuotaDetail[];
     }
-    /** TopicConfigs. */
+    /**
+     * TopicConfigs.
+     */
     interface TopicConfigs {
         /** The value of config property 'retention.bytes'. */
         'retention.bytes'?: string;
@@ -718,7 +792,9 @@ declare namespace AdminrestV1 {
         /** The value of config property 'segment.ms'. */
         'segment.ms'?: string;
     }
-    /** TopicDetail. */
+    /**
+     * TopicDetail.
+     */
     interface TopicDetail {
         /** The name of the topic. */
         name?: string;
@@ -734,7 +810,9 @@ declare namespace AdminrestV1 {
         /** The replia assignment of the topic. */
         replicaAssignments?: TopicDetailReplicaAssignmentsItem[];
     }
-    /** The offsets of a topic partition. */
+    /**
+     * The offsets of a topic partition.
+     */
     interface TopicPartitionOffset {
         /** The name of the topic. */
         topic?: string;
