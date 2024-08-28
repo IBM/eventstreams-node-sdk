@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,15 @@
 // need to import the whole package to mock getAuthenticatorFromEnvironment
 const sdkCorePackage = require('ibm-cloud-sdk-core');
 
-const { NoAuthAuthenticator, unitTestUtils } = sdkCorePackage;
-
-const AdminrestV1 = require('../../dist/adminrest/v1');
-
+const { NoAuthAuthenticator } = sdkCorePackage;
 const {
   getOptions,
   checkUrlAndMethod,
   checkMediaHeaders,
   expectToBePromise,
   checkForSuccessfulExecution,
-} = unitTestUtils;
+} = require('@ibm-cloud/sdk-test-utilities');
+const AdminrestV1 = require('../../dist/adminrest/v1');
 
 const adminrestServiceOptions = {
   authenticator: new NoAuthAuthenticator(),
@@ -1908,6 +1906,66 @@ describe('AdminrestV1', () => {
       test('should not have any problems when no parameters are passed in', () => {
         // invoke the method with no parameters
         adminrestService.getMirroringActiveTopics({});
+        checkForSuccessfulExecution(createRequestMock);
+      });
+    });
+  });
+
+  describe('getStatus', () => {
+    describe('positive tests', () => {
+      function __getStatusTest() {
+        // Construct the params object for operation getStatus
+        const getStatusParams = {};
+
+        const getStatusResult = adminrestService.getStatus(getStatusParams);
+
+        // all methods should return a Promise
+        expectToBePromise(getStatusResult);
+
+        // assert that create request was called
+        expect(createRequestMock).toHaveBeenCalledTimes(1);
+
+        const mockRequestOptions = getOptions(createRequestMock);
+
+        checkUrlAndMethod(mockRequestOptions, '/admin/status', 'GET');
+        const expectedAccept = 'application/json';
+        const expectedContentType = undefined;
+        checkMediaHeaders(createRequestMock, expectedAccept, expectedContentType);
+      }
+
+      test('should pass the right params to createRequest with enable and disable retries', () => {
+        // baseline test
+        __getStatusTest();
+
+        // enable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.enableRetries();
+        __getStatusTest();
+
+        // disable retries and test again
+        createRequestMock.mockClear();
+        adminrestService.disableRetries();
+        __getStatusTest();
+      });
+
+      test('should prioritize user-given headers', () => {
+        // parameters
+        const userAccept = 'fake/accept';
+        const userContentType = 'fake/contentType';
+        const getStatusParams = {
+          headers: {
+            Accept: userAccept,
+            'Content-Type': userContentType,
+          },
+        };
+
+        adminrestService.getStatus(getStatusParams);
+        checkMediaHeaders(createRequestMock, userAccept, userContentType);
+      });
+
+      test('should not have any problems when no parameters are passed in', () => {
+        // invoke the method with no parameters
+        adminrestService.getStatus({});
         checkForSuccessfulExecution(createRequestMock);
       });
     });
