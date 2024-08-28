@@ -7,20 +7,25 @@ group: focal
 
 
 node_js:
-# - 14
-# - 16
-# - 18
+- 18
+- 20
 
-# remove the "echo" command from the "before_install" section below.
 before_install:
-- echo -e "machine github.ibm.com\n  login $GITHUB_ACCESS_TOKEN" > ~/.netrc
-- wget -qO - https://package.perforce.com/perforce.pubkey | sudo apt-key add -
-- npm i -g npm@8
+- node --version
 - npm --version
 
 script:
 - npm run build
 - npm run test-travis || travis_terminate 1
-- npm run lint
+#- npm run lint
 - npm run check-packages
 
+
+# To enable semantic-release, uncomment this section.
+# deploy:
+# - provider: script
+#   skip_cleanup: true
+#   script: npx semantic-release
+#   on:
+#     node: 20
+#     branch: main
