@@ -13,3 +13,4 @@ test/resources/auth.js
 !examples/**/*.js
 lib/*.js
 scripts/typedoc/
+scripts/*.js

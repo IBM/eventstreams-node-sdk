@@ -2,10 +2,6 @@ language: node_js
 
 dist: focal
 
-# Remove this if using external Travis
-group: focal
-
-
 node_js:
 - 18
 - 20
@@ -17,7 +13,7 @@ before_install:
 script:
 - npm run build
 - npm run test-travis || travis_terminate 1
-#- npm run lint
+- npm run lint
 - npm run check-packages
 
 
