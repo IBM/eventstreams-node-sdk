@@ -3,7 +3,7 @@
 <!--
 [![npm-version](https://img.shields.io/npm/v/IBM/eventstreams-node-sdk.svg)](https://www.npmjs.com/package/adminrestv1)
 -->
-# IBM Cloud Event Streams Node SDK Version 1.3.0
+# IBM Cloud Event Streams Node SDK Version 1.3.1
 
 ## Introduction
 

@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /**
- * IBM OpenAPI SDK Code Generator Version: 3.76.0-ad3e6f96-20230724-172814
+ * IBM OpenAPI SDK Code Generator Version: 3.93.0-c40121e6-20240729-182103
  */
 
 import * as extend from 'extend';
@@ -23,16 +23,16 @@ import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
 import {
   Authenticator,
   BaseService,
+  UserOptions,
   getAuthenticatorFromEnvironment,
   validateParams,
-  UserOptions,
 } from 'ibm-cloud-sdk-core';
 import { getSdkHeaders } from '../lib/common';
 
 /**
  * IBM Event Streams schema registry management
  *
- * API Version: 1.3.0
+ * API Version: 1.4.1
  */
 
 class SchemaregistryV1 extends BaseService {
@@ -48,7 +48,7 @@ class SchemaregistryV1 extends BaseService {
    * @param {UserOptions} [options] - The parameters to send to the service.
    * @param {string} [options.serviceName] - The name of the service to configure
    * @param {Authenticator} [options.authenticator] - The Authenticator object used to authenticate requests to the service
-   * @param {string} [options.serviceUrl] - The URL for the service
+   * @param {string} [options.serviceUrl] - The base URL for the service
    * @returns {SchemaregistryV1}
    */
 
@@ -73,7 +73,7 @@ class SchemaregistryV1 extends BaseService {
    * Construct a SchemaregistryV1 object.
    *
    * @param {Object} options - Options for the service.
-   * @param {string} [options.serviceUrl] - The base url to use when contacting the service. The base url may differ between IBM Cloud regions.
+   * @param {string} [options.serviceUrl] - The base URL for the service
    * @param {OutgoingHttpHeaders} [options.headers] - Default headers that shall be included with every request to the service.
    * @param {Authenticator} options.authenticator - The Authenticator object used to authenticate requests to the service
    * @constructor
@@ -1316,23 +1316,47 @@ namespace SchemaregistryV1 {
    * model interfaces
    ************************/
 
-  /** AvroSchema. */
+  /**
+   * AvroSchema.
+   */
   export interface AvroSchema {
     /** The AVRO schema. */
     schema?: JsonObject;
   }
 
-  /** Rules define constraints on whether the schema registry will accept a new version of a schema. */
+  /**
+   * Rules define constraints on whether the schema registry will accept a new version of a schema.
+   */
   export interface Rule {
     /** The type of the rule. Currently only one type is supported (`COMPATIBILITY`). */
-    type: string;
+    type: Rule.Constants.Type | string;
     /** The configuration value for the rule. Which values are valid depends on the value of this object's `type`
      *  property.
      */
-    config: string;
+    config: Rule.Constants.Config | string;
+  }
+  export namespace Rule {
+    export namespace Constants {
+      /** The type of the rule. Currently only one type is supported (`COMPATIBILITY`). */
+      export enum Type {
+        COMPATIBILITY = 'COMPATIBILITY',
+      }
+      /** The configuration value for the rule. Which values are valid depends on the value of this object's `type` property. */
+      export enum Config {
+        BACKWARD = 'BACKWARD',
+        BACKWARD_TRANSITIVE = 'BACKWARD_TRANSITIVE',
+        FORWARD = 'FORWARD',
+        FORWARD_TRANSITIVE = 'FORWARD_TRANSITIVE',
+        FULL = 'FULL',
+        FULL_TRANSITIVE = 'FULL_TRANSITIVE',
+        NONE = 'NONE',
+      }
+    }
   }
 
-  /** Information about a schema version. */
+  /**
+   * Information about a schema version.
+   */
   export interface SchemaMetadata {
     /** Creation timestamp of the schema in UNIX epoc format. */
     createdOn: number;
