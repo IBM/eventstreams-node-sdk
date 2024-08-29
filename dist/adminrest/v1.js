@@ -1,6 +1,6 @@
 "use strict";
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 /**
- * IBM OpenAPI SDK Code Generator Version: 3.76.0-ad3e6f96-20230724-172814
+ * IBM OpenAPI SDK Code Generator Version: 3.93.0-c40121e6-20240729-182103
  */
 var extend = require("extend");
 var ibm_cloud_sdk_core_1 = require("ibm-cloud-sdk-core");
@@ -49,7 +49,7 @@ var common_1 = require("../lib/common");
 /**
  * The administration REST API for IBM Event Streams on Cloud.
  *
- * API Version: 1.3.0
+ * API Version: 1.3.1
  */
 var AdminrestV1 = /** @class */ (function (_super) {
     __extends(AdminrestV1, _super);
@@ -57,7 +57,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
      * Construct a AdminrestV1 object.
      *
      * @param {Object} options - Options for the service.
-     * @param {string} [options.serviceUrl] - The base url to use when contacting the service. The base url may differ between IBM Cloud regions.
+     * @param {string} [options.serviceUrl] - The base URL for the service
      * @param {OutgoingHttpHeaders} [options.headers] - Default headers that shall be included with every request to the service.
      * @param {Authenticator} options.authenticator - The Authenticator object used to authenticate requests to the service
      * @constructor
@@ -81,7 +81,7 @@ var AdminrestV1 = /** @class */ (function (_super) {
      * @param {UserOptions} [options] - The parameters to send to the service.
      * @param {string} [options.serviceName] - The name of the service to configure
      * @param {Authenticator} [options.authenticator] - The Authenticator object used to authenticate requests to the service
-     * @param {string} [options.serviceUrl] - The URL for the service
+     * @param {string} [options.serviceUrl] - The base URL for the service
      * @returns {AdminrestV1}
      */
     AdminrestV1.newInstance = function (options) {
@@ -833,9 +833,9 @@ var AdminrestV1 = /** @class */ (function (_super) {
      *
      * @param {Object} params - The parameters to send to the service.
      * @param {string} params.groupId - The group ID for the consumer group to be updated.
-     * @param {string} [params.topic] - The name of the topic to be reset.  If missing or blank, the operation applies to
+     * @param {string} [params.topic] - The name of the topic to be reset. If missing or blank, the operation applies to
      * all topics read by the consumer group.
-     * @param {string} [params.mode] - Mode of shift operation.  Valid values are 'earliest', 'latest', 'datetime'.
+     * @param {string} [params.mode] - Mode of shift operation. Valid values are 'earliest', 'latest', 'datetime'.
      * @param {string} [params.value] - Value for resetting offsets, based on 'mode=datetime', omit for 'earliest' and
      * 'latest'.
      * @param {boolean} [params.execute] - Whether to execute the operation of resetting the offsets.
@@ -975,8 +975,58 @@ var AdminrestV1 = /** @class */ (function (_super) {
         };
         return this.createRequest(parameters);
     };
+    /**
+     * Get the status of the instance.
+     *
+     * Get the status of the instance.
+     *
+     * @param {Object} [params] - The parameters to send to the service.
+     * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+     * @returns {Promise<AdminrestV1.Response<AdminrestV1.InstanceStatus>>}
+     */
+    AdminrestV1.prototype.getStatus = function (params) {
+        var _params = __assign({}, params);
+        var _requiredParams = [];
+        var _validParams = ['headers'];
+        var _validationErrors = (0, ibm_cloud_sdk_core_1.validateParams)(_params, _requiredParams, _validParams);
+        if (_validationErrors) {
+            return Promise.reject(_validationErrors);
+        }
+        var sdkHeaders = (0, common_1.getSdkHeaders)(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getStatus');
+        var parameters = {
+            options: {
+                url: '/admin/status',
+                method: 'GET',
+            },
+            defaultOptions: extend(true, {}, this.baseOptions, {
+                headers: extend(true, sdkHeaders, {
+                    'Accept': 'application/json',
+                }, _params.headers),
+            }),
+        };
+        return this.createRequest(parameters);
+    };
     AdminrestV1.DEFAULT_SERVICE_NAME = 'adminrest';
     return AdminrestV1;
 }(ibm_cloud_sdk_core_1.BaseService));
+/*************************
+ * interfaces
+ ************************/
+(function (AdminrestV1) {
+    var InstanceStatus;
+    (function (InstanceStatus) {
+        var Constants;
+        (function (Constants) {
+            /** The status of the instance: * `available` - the instance is functioning as expected * `degraded` - the instance is in a degraded state, some operations may not complete successfully * `offline` - the instance is offline, all operations attempted against the instance will fail * `unknown` - the state of the instance is not known at this time. */
+            var Status;
+            (function (Status) {
+                Status["AVAILABLE"] = "available";
+                Status["DEGRADED"] = "degraded";
+                Status["OFFLINE"] = "offline";
+                Status["UNKNOWN"] = "unknown";
+            })(Status = Constants.Status || (Constants.Status = {}));
+        })(Constants = InstanceStatus.Constants || (InstanceStatus.Constants = {}));
+    })(InstanceStatus = AdminrestV1.InstanceStatus || (AdminrestV1.InstanceStatus = {}));
+})(AdminrestV1 || (AdminrestV1 = {}));
 module.exports = AdminrestV1;
 //# sourceMappingURL=v1.js.map

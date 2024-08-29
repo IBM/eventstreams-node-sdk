@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2023.
+ * (C) Copyright IBM Corp. 2024.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /**
- * IBM OpenAPI SDK Code Generator Version: 3.76.0-ad3e6f96-20230724-172814
+ * IBM OpenAPI SDK Code Generator Version: 3.93.0-c40121e6-20240729-182103
  */
 
 import * as extend from 'extend';
@@ -23,16 +23,16 @@ import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
 import {
   Authenticator,
   BaseService,
+  UserOptions,
   getAuthenticatorFromEnvironment,
   validateParams,
-  UserOptions,
 } from 'ibm-cloud-sdk-core';
 import { getSdkHeaders } from '../lib/common';
 
 /**
  * The administration REST API for IBM Event Streams on Cloud.
  *
- * API Version: 1.3.0
+ * API Version: 1.3.1
  */
 
 class AdminrestV1 extends BaseService {
@@ -48,7 +48,7 @@ class AdminrestV1 extends BaseService {
    * @param {UserOptions} [options] - The parameters to send to the service.
    * @param {string} [options.serviceName] - The name of the service to configure
    * @param {Authenticator} [options.authenticator] - The Authenticator object used to authenticate requests to the service
-   * @param {string} [options.serviceUrl] - The URL for the service
+   * @param {string} [options.serviceUrl] - The base URL for the service
    * @returns {AdminrestV1}
    */
 
@@ -73,7 +73,7 @@ class AdminrestV1 extends BaseService {
    * Construct a AdminrestV1 object.
    *
    * @param {Object} options - Options for the service.
-   * @param {string} [options.serviceUrl] - The base url to use when contacting the service. The base url may differ between IBM Cloud regions.
+   * @param {string} [options.serviceUrl] - The base URL for the service
    * @param {OutgoingHttpHeaders} [options.headers] - Default headers that shall be included with every request to the service.
    * @param {Authenticator} options.authenticator - The Authenticator object used to authenticate requests to the service
    * @constructor
@@ -1032,9 +1032,9 @@ class AdminrestV1 extends BaseService {
    *
    * @param {Object} params - The parameters to send to the service.
    * @param {string} params.groupId - The group ID for the consumer group to be updated.
-   * @param {string} [params.topic] - The name of the topic to be reset.  If missing or blank, the operation applies to
+   * @param {string} [params.topic] - The name of the topic to be reset. If missing or blank, the operation applies to
    * all topics read by the consumer group.
-   * @param {string} [params.mode] - Mode of shift operation.  Valid values are 'earliest', 'latest', 'datetime'.
+   * @param {string} [params.mode] - Mode of shift operation. Valid values are 'earliest', 'latest', 'datetime'.
    * @param {string} [params.value] - Value for resetting offsets, based on 'mode=datetime', omit for 'earliest' and
    * 'latest'.
    * @param {boolean} [params.execute] - Whether to execute the operation of resetting the offsets.
@@ -1216,6 +1216,48 @@ class AdminrestV1 extends BaseService {
     const parameters = {
       options: {
         url: '/admin/mirroring/active-topics',
+        method: 'GET',
+      },
+      defaultOptions: extend(true, {}, this.baseOptions, {
+        headers: extend(
+          true,
+          sdkHeaders,
+          {
+            'Accept': 'application/json',
+          },
+          _params.headers
+        ),
+      }),
+    };
+
+    return this.createRequest(parameters);
+  }
+
+  /**
+   * Get the status of the instance.
+   *
+   * Get the status of the instance.
+   *
+   * @param {Object} [params] - The parameters to send to the service.
+   * @param {OutgoingHttpHeaders} [params.headers] - Custom request headers
+   * @returns {Promise<AdminrestV1.Response<AdminrestV1.InstanceStatus>>}
+   */
+  public getStatus(
+    params?: AdminrestV1.GetStatusParams
+  ): Promise<AdminrestV1.Response<AdminrestV1.InstanceStatus>> {
+    const _params = { ...params };
+    const _requiredParams = [];
+    const _validParams = ['headers'];
+    const _validationErrors = validateParams(_params, _requiredParams, _validParams);
+    if (_validationErrors) {
+      return Promise.reject(_validationErrors);
+    }
+
+    const sdkHeaders = getSdkHeaders(AdminrestV1.DEFAULT_SERVICE_NAME, 'v1', 'getStatus');
+
+    const parameters = {
+      options: {
+        url: '/admin/status',
         method: 'GET',
       },
       defaultOptions: extend(true, {}, this.baseOptions, {
@@ -1448,11 +1490,11 @@ namespace AdminrestV1 {
   export interface UpdateConsumerGroupParams {
     /** The group ID for the consumer group to be updated. */
     groupId: string;
-    /** The name of the topic to be reset.  If missing or blank, the operation applies to all topics read by the
+    /** The name of the topic to be reset. If missing or blank, the operation applies to all topics read by the
      *  consumer group.
      */
     topic?: string;
-    /** Mode of shift operation.  Valid values are 'earliest', 'latest', 'datetime'. */
+    /** Mode of shift operation. Valid values are 'earliest', 'latest', 'datetime'. */
     mode?: string;
     /** Value for resetting offsets, based on 'mode=datetime', omit for 'earliest' and 'latest'. */
     value?: string;
@@ -1477,11 +1519,18 @@ namespace AdminrestV1 {
     headers?: OutgoingHttpHeaders;
   }
 
+  /** Parameters for the `getStatus` operation. */
+  export interface GetStatusParams {
+    headers?: OutgoingHttpHeaders;
+  }
+
   /*************************
    * model interfaces
    ************************/
 
-  /** BrokerDetailConfigsItem. */
+  /**
+   * BrokerDetailConfigsItem.
+   */
   export interface BrokerDetailConfigsItem {
     /** The name of the config property. */
     name?: string;
@@ -1491,14 +1540,18 @@ namespace AdminrestV1 {
     is_sensitive?: boolean;
   }
 
-  /** The new offset for one partition of one topic after resetting consumer group's offset. */
+  /**
+   * The new offset for one partition of one topic after resetting consumer group's offset.
+   */
   export interface GroupResetResultsItem {
     topic?: string;
     partition?: number;
     offset?: number;
   }
 
-  /** The topic partitions assigned for the consumer group member. */
+  /**
+   * The topic partitions assigned for the consumer group member.
+   */
   export interface MemberAssignmentsItem {
     /** The name of the topic. */
     topic?: string;
@@ -1506,7 +1559,9 @@ namespace AdminrestV1 {
     partition?: number;
   }
 
-  /** RecordDeleteRequestRecordsToDeleteItem. */
+  /**
+   * RecordDeleteRequestRecordsToDeleteItem.
+   */
   export interface RecordDeleteRequestRecordsToDeleteItem {
     /** The number of partitions. */
     partition?: number;
@@ -1514,7 +1569,9 @@ namespace AdminrestV1 {
     before_offset?: number;
   }
 
-  /** TopicCreateRequestConfigsItem. */
+  /**
+   * TopicCreateRequestConfigsItem.
+   */
   export interface TopicCreateRequestConfigsItem {
     /** The name of the config property. */
     name?: string;
@@ -1522,19 +1579,25 @@ namespace AdminrestV1 {
     value?: string;
   }
 
-  /** TopicDetailReplicaAssignmentsItem. */
+  /**
+   * TopicDetailReplicaAssignmentsItem.
+   */
   export interface TopicDetailReplicaAssignmentsItem {
     /** The ID of the partition. */
     id?: number;
     brokers?: TopicDetailReplicaAssignmentsItemBrokers;
   }
 
-  /** TopicDetailReplicaAssignmentsItemBrokers. */
+  /**
+   * TopicDetailReplicaAssignmentsItemBrokers.
+   */
   export interface TopicDetailReplicaAssignmentsItemBrokers {
     replicas?: number[];
   }
 
-  /** TopicUpdateRequestConfigsItem. */
+  /**
+   * TopicUpdateRequestConfigsItem.
+   */
   export interface TopicUpdateRequestConfigsItem {
     /** The name of the config property. */
     name?: string;
@@ -1544,7 +1607,9 @@ namespace AdminrestV1 {
     reset_to_default?: boolean;
   }
 
-  /** BrokerDetail. */
+  /**
+   * BrokerDetail.
+   */
   export interface BrokerDetail {
     /** The ID of the broker configured in the 'broker.id' broker config property. */
     id?: number;
@@ -1563,7 +1628,9 @@ namespace AdminrestV1 {
     configs?: BrokerDetailConfigsItem[];
   }
 
-  /** BrokerSummary. */
+  /**
+   * BrokerSummary.
+   */
   export interface BrokerSummary {
     /** The ID of the broker configured in the 'broker.id' broker config property. */
     id?: number;
@@ -1581,7 +1648,9 @@ namespace AdminrestV1 {
     rack?: string;
   }
 
-  /** Cluster. */
+  /**
+   * Cluster.
+   */
   export interface Cluster {
     /** The ID of the cluster. */
     id?: string;
@@ -1590,7 +1659,9 @@ namespace AdminrestV1 {
     brokers?: BrokerSummary[];
   }
 
-  /** EntityQuotaDetail. */
+  /**
+   * EntityQuotaDetail.
+   */
   export interface EntityQuotaDetail {
     /** The name of the entity. */
     entity_name: string;
@@ -1600,7 +1671,9 @@ namespace AdminrestV1 {
     consumer_byte_rate?: number;
   }
 
-  /** GroupDetail. */
+  /**
+   * GroupDetail.
+   */
   export interface GroupDetail {
     /** The ID of the consumer group. */
     group_id?: string;
@@ -1612,7 +1685,32 @@ namespace AdminrestV1 {
     offsets?: TopicPartitionOffset[];
   }
 
-  /** Member. */
+  /**
+   * Information about the status of the instance.
+   */
+  export interface InstanceStatus {
+    /** The status of the instance: * `available` - the instance is functioning as expected * `degraded` - the
+     *  instance is in a degraded state, some operations may not complete successfully * `offline` - the instance is
+     *  offline, all operations attempted against the instance will fail * `unknown` - the state of the instance is not
+     *  known at this time.
+     */
+    status?: InstanceStatus.Constants.Status | string;
+  }
+  export namespace InstanceStatus {
+    export namespace Constants {
+      /** The status of the instance: * `available` - the instance is functioning as expected * `degraded` - the instance is in a degraded state, some operations may not complete successfully * `offline` - the instance is offline, all operations attempted against the instance will fail * `unknown` - the state of the instance is not known at this time. */
+      export enum Status {
+        AVAILABLE = 'available',
+        DEGRADED = 'degraded',
+        OFFLINE = 'offline',
+        UNKNOWN = 'unknown',
+      }
+    }
+  }
+
+  /**
+   * Member.
+   */
   export interface Member {
     /** The consumer ID of the consumer group member. */
     consumer_id?: string;
@@ -1624,17 +1722,23 @@ namespace AdminrestV1 {
     assignments?: MemberAssignmentsItem[];
   }
 
-  /** Topics that are being actively mirrored. */
+  /**
+   * Topics that are being actively mirrored.
+   */
   export interface MirroringActiveTopics {
     active_topics?: string[];
   }
 
-  /** Mirroring topic selection payload. */
+  /**
+   * Mirroring topic selection payload.
+   */
   export interface MirroringTopicSelection {
     includes?: string[];
   }
 
-  /** QuotaDetail. */
+  /**
+   * QuotaDetail.
+   */
   export interface QuotaDetail {
     /** The producer byte rate quota value. */
     producer_byte_rate?: number;
@@ -1642,12 +1746,16 @@ namespace AdminrestV1 {
     consumer_byte_rate?: number;
   }
 
-  /** A list of 'quota_detail' is returned. */
+  /**
+   * A list of 'quota_detail' is returned.
+   */
   export interface QuotaList {
     data?: EntityQuotaDetail[];
   }
 
-  /** TopicConfigs. */
+  /**
+   * TopicConfigs.
+   */
   export interface TopicConfigs {
     /** The value of config property 'retention.bytes'. */
     'retention.bytes'?: string;
@@ -1659,7 +1767,9 @@ namespace AdminrestV1 {
     'segment.ms'?: string;
   }
 
-  /** TopicDetail. */
+  /**
+   * TopicDetail.
+   */
   export interface TopicDetail {
     /** The name of the topic. */
     name?: string;
@@ -1676,7 +1786,9 @@ namespace AdminrestV1 {
     replicaAssignments?: TopicDetailReplicaAssignmentsItem[];
   }
 
-  /** The offsets of a topic partition. */
+  /**
+   * The offsets of a topic partition.
+   */
   export interface TopicPartitionOffset {
     /** The name of the topic. */
     topic?: string;
