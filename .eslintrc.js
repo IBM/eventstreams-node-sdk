@@ -4,15 +4,15 @@ module.exports = {
     {
       'env': {
         'node': true,
+        'es2022': true,
       },
       'files': ['**/*.js', '**/*.jsx'],
-      'plugins': ['node', 'jest', 'prettier'],
-      'extends': ['airbnb-base', 'plugin:jest/recommended', 'plugin:jest/style', 'prettier'],
+      'parserOptions': {
+        'ecmaVersion': 'latest',
+      },
+      'plugins': ['jest', 'prettier'],
+      'extends': ['eslint:recommended', 'plugin:jest/recommended', 'plugin:jest/style', 'prettier'],
       'rules': {
-        'camelcase': 'off',
-        'import/extensions': 'off',
-        'no-template-curly-in-string': 'off',
-        'no-underscore-dangle': 'off',
         'prefer-const': 'error',
         'prettier/prettier': 'error',
       },
@@ -24,7 +24,6 @@ module.exports = {
         'jest/no-conditional-expect': 'off',
         'jest/no-done-callback': 'off',
         'jest/no-standalone-expect': 'off',
-        'jest/no-try-expect': 'off',
         'no-unused-vars': 'off',
       },
     },
@@ -32,22 +31,24 @@ module.exports = {
       'files': ['**/*.ts', '**/*.tsx'],
       'env': {
         'node': true,
+        'es2022': true,
       },
-      'extends': ['airbnb-typescript/base', 'prettier'],
+      'extends': ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
       'parser': '@typescript-eslint/parser',
       'parserOptions': {
         'project': 'tsconfig.json',
         'sourceType': 'module',
       },
-      'plugins': ['eslint-plugin-jsdoc', 'eslint-plugin-import', '@typescript-eslint', 'prettier'],
+      'plugins': ['@typescript-eslint', 'prettier'],
       'rules': {
-        '@typescript-eslint/naming-convention': 'off',
+        // adminrest/v1.ts and schemaregistry/v1.ts come from the IBM OpenAPI SDK
+        // generator, which emits namespaces, `any` params and empty interfaces
+        '@typescript-eslint/no-empty-object-type': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-namespace': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
-        'max-len': 'off',
-        'no-param-reassign': 'off',
-        'no-underscore-dangle': 'off',
         'prettier/prettier': 'error',
-        'spaced-comment': ['error', 'always', { 'exceptions': ['*'] }],
       },
     },
   ],
