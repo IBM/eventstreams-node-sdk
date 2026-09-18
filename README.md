@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/IBM/eventstreams-node-sdk.svg?&branch=main)](https://travis-ci.com/IBM/eventstreams-node-sdk)
+[![Build Status](https://github.com/IBM/eventstreams-node-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/IBM/eventstreams-node-sdk/actions/workflows/ci.yml)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 <!--
 [![npm-version](https://img.shields.io/npm/v/IBM/eventstreams-node-sdk.svg)](https://www.npmjs.com/package/adminrestv1)
@@ -59,7 +59,7 @@ Service Name | Import Path
 * The [IBM Cloud CLI.](https://cloud.ibm.com/docs/cli?topic=cli-getting-started)
 * An IAM API key to allow the SDK to access your account. Create one [here](https://cloud.ibm.com/iam/apikeys).
 * An IBM Cloud Event Streams Instance Create one [here](https://cloud.ibm.com/registration?target=/catalog/services/event-streams)
-* **Node.js >=14**: This SDK is tested with Node.js versions 14 and up. It may work on previous versions but this is not officially supported.
+* **Node.js >=22**: This SDK is tested with Node.js versions 22 and up. It may work on previous versions but this is not officially supported.
 
 
 
