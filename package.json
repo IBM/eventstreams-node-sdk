@@ -59,7 +59,7 @@
     "nock": "^13.2.4",
     "prettier": "^2.3.0",
     "semantic-release": "^25.0.8",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "micromatch": "^4.0.7",
